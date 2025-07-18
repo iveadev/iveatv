@@ -1,5 +1,5 @@
 <script setup>
-import { router, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { onMounted, onUpdated, ref, watch } from 'vue';
 
 const props = defineProps({
@@ -70,9 +70,18 @@ const handleError = () => {
     showNext();
 }
 
+const reloadPage=() => {
+    window.location.reload();
+}
+
+const forceNext = () => {
+    router.visit(route('banner.display', {id: nextBanner.value}))
+}
+
 </script>
 
 <template>
+    <Head :title="banner.title" />
     <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
         <Transition name="fade">
         <div v-if="!loading">
@@ -80,7 +89,7 @@ const handleError = () => {
                 <img :src="banner.url" class="max-h-screen" @error="handleError" @load="showNext">
             </div>
             <div v-if="banner.type == 'VIDEO'" class="bg-black">
-                <video id="videoplayer" autoplay controls @ended="goToNext">
+                <video id="videoplayer" autoplay controls muted @ended="goToNext">
                     <source :src="banner.url" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
                 </video> 
@@ -104,6 +113,22 @@ const handleError = () => {
                     <Transition name="pulse">
                         <img src="/logo-white.png" :class="{'pulsing-element':props.empty}">
                     </Transition>
+                </div>
+                <div class="fixed top-5 right-5 group w-56 grid grid-cols-2 justify-items-end">
+                    <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="reloadPage">
+                        <div class="hover:text-white p-6 hover:bg-blue-500/40 rounded-xl">
+                            <div class="text-7xl">
+                                R
+                            </div>
+                        </div>
+                    </button>
+                    <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="forceNext">
+                        <div class="hover:text-white p-6 hover:bg-green-500/40 rounded-xl">
+                            <div class="text-7xl">
+                                >
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
             
@@ -140,7 +165,7 @@ const handleError = () => {
     /* Additional keyframes for continuous pulsing */
     @keyframes continuous-pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(0.8); }
+      50% { transform: scale(0.6); }
       100% { transform: scale(1); }
       
     }

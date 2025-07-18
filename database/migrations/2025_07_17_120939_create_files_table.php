@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('type')->comment('foto o video');
+            $table->string('filename');
             $table->string('url');
-            $table->integer('duration')->comment('en segundos');
-            $table->datetime('visibleFrom');
-            $table->datetime('visibleTo');
-            $table->boolean('visible')->default(1);
-            $table->integer('order')->default(999);
+            $table->boolean('avalible')->default(1);
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('files');
     }
 };

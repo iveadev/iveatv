@@ -12,13 +12,29 @@ const props = defineProps({
     },
     closeable: {
         type: Boolean,
-        default: true,
+        default: false,
     },
+    type: {
+        type: String,
+        default: 'gray'
+    }
 });
 
 const emit = defineEmits(['close']);
 const dialog = ref();
 const showSlot = ref(props.show);
+
+const types = {
+    default:'bg-red-ins text-white',
+    light: 'bg-gray-200 text-black',
+    gray: 'bg-gray-600 text-white',
+    danger: 'bg-red-500 text-white',
+    info: 'bg-blue-500 text-white',
+    success: 'bg-emerald-500 text-white',
+    notify: 'bg-indigo-500 text-white',
+    dark: 'bg-black text-white',
+    warning: 'bg-amber-500 text-white', 
+}
 
 watch(
     () => props.show,
@@ -48,6 +64,7 @@ const close = () => {
 const closeOnEscape = (e) => {
     if (e.key === 'Escape') {
         e.preventDefault();
+        e.stopPropagation();
 
         if (props.show) {
             close();
@@ -70,6 +87,10 @@ const maxWidthClass = computed(() => {
         lg: 'sm:max-w-lg',
         xl: 'sm:max-w-xl',
         '2xl': 'sm:max-w-2xl',
+        '3xl': 'sm:max-w-3xl',
+        '4xl': 'sm:max-w-4xl',
+        '5xl': 'sm:max-w-5xl',
+        '6xl': 'sm:max-w-6xl',
     }[props.maxWidth];
 });
 </script>
@@ -115,7 +136,23 @@ const maxWidthClass = computed(() => {
                     class="mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full"
                     :class="maxWidthClass"
                 >
+                    <div v-if="$slots.header" class="px-6 py-4 text-lg border-b font-medium overflow-hidden" :class="types[type]">
+                        <div class="flex overflow-hidden">
+                            <div class="flex-1">
+                                <slot name="header"/>
+                            </div>
+                            <button @click="close" v-if="closeable">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                    </div>
                     <slot v-if="showSlot" />
+                    <div v-if="$slots.actions" class="flex justify-end gap-2 bg-gray-50 px-6 py-4 border-t overflow-hidden">
+                        <slot name="actions" />
+                    </div>
                 </div>
             </Transition>
         </div>
