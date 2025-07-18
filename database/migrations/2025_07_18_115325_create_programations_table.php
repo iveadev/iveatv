@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create('programations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('filename');
-            $table->string('type')->default('IMAGEN');
-            $table->string('url');
-            $table->boolean('avalible')->default(1);
+            $table->date('date');
+            $table->integer('event_id');
+            $table->boolean('visible')->default(0);
+            $table->integer('order')->default(999);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('files');
+        Schema::dropIfExists('programations');
     }
 };

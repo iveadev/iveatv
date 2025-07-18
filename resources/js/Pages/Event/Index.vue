@@ -4,22 +4,16 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { dateFormat } from '@/utils';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import EventForm from './Profile/Partials/EventForm.vue';
+import EventForm from './Partials/EventForm.vue';
 
 const props = defineProps({
-    banners:{
+    events:{
         type:Array,
         default: []
     },
     today:{
-        type:String,
-    },
-    previousDay:{
-        type:String,
-    },
-    nextDay:{
         type:String,
     }
 })
@@ -27,6 +21,7 @@ const props = defineProps({
 const eventModalIsShowing = ref(false)
 const emptyevent = {
     id: null,
+    title:'',
     file_id:'',
     duration:'10',
     visible: false,
@@ -53,21 +48,25 @@ const closeeventModal = () => {
 }
 
 const saveevent = () => {
-    event.post(route('event.store'),{
-        onSuccess:() => {
-            closeeventModal()
-        }
-    })
-}
-
-const goToDay = (day) => {
-    router.visit(route(route().current(),{date: day}))
+    if(event.id){
+        event.put(route('event.update', event.id),{
+            onSuccess:() => {
+                closeeventModal()
+            }
+        })
+    } else {
+        event.post(route('event.store'),{
+            onSuccess:() => {
+                closeeventModal()
+            }
+        })
+    }
 }
 
 </script>
 
 <template>
-    <Head title="Programación" />
+    <Head title="Eventos" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -75,50 +74,50 @@ const goToDay = (day) => {
                 <h2
                 class="flex-1 text-xl font-semibold leading-tight text-gray-800"
             >
-                Programación del día
+                Adminsitración de eventos
             </h2>
+            <SecondaryButton @click ="openeventModal($event)">
+                Nuevo evento
+            </SecondaryButton>
             </div>
         </template>
 
-        <div class="">
+        <div class="p-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 
-                <div class="grid grid-cols-3 gap-5 py-4">
-                    <div>
-                        <SecondaryButton @click="goToDay(previousDay)">Anterior</SecondaryButton>
-                    </div>
-                    <button type="button" class="px-3 rounded" title="Seleccionar otra fecha">
-                        <b class="text-red-800 text-center">{{today}}</b>
-                    </button>
-                    <div class="grid justify-items-end">
-                        <SecondaryButton @click="goToDay(nextDay)">Siguiente</SecondaryButton>
-                    </div>
-                </div>
-
                 <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
+                    class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
                 >
                     <table class="w-full text-center">
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
-                                <th>Orden</th>
+                                <th>ID</th>
                                 <th>Título</th>
-                                <th>Tipo de contenido</th>
+                                <th>Archivo</th>
                                 <th>Duración (seg.)</th>
-                                <th>¿Visible?</th>
+                                <th>Visible</th>
+                                <th>Vigencia</th>
                                 <th class="w-1/5">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(banner, index) in banners" class="h-10 border">
-                                <td>{{ index +1 }}</td>
-                                <td class="font-bold">{{ banner.event.title }}</td>
-                                <td>{{ banner.event.file.type }}</td>
-                                <td>{{ banner.event.duration }}</td>
-                                <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
+                            <tr v-for="(event, index) in events" class="h-10 border">
+                                <td>{{ event.id }}</td>
+                                <td>{{ event.title }}</td>
+                                <td>
+                                    <p class="font-bold py-2">{{ event.file.name }}</p>
+                                    <p>{{ event.file.type }}</p>
+                                    <p class="text-sm text-gray-600">({{ event.file.url }})</p>
+                                </td>
+                                <td>{{ event.duration }}</td>
+                                <td>{{ event.visible ? 'Sí' : 'No' }}</td>
+                                <td>
+                                    <p><span class="font-bold">De:</span> {{ dateFormat(event.visibleFrom) }}</p>
+                                    <p><span class="font-bold">A  :</span> {{ dateFormat(event.visibleTo) }}</p>
+                                </td>
                                 <td>
                                     <div class="flex gap-2 justify-center">
-                                        <SecondaryButton @click="openeventModal($event, banner)">
+                                        <SecondaryButton @click="openeventModal($event, event)">
                                             Editar
                                         </SecondaryButton>
                                         <SecondaryButton>
@@ -127,8 +126,8 @@ const goToDay = (day) => {
                                     </div>
                                 </td>
                             </tr>
-                            <tr v-if="banners.length == 0">
-                                <td colspan="10">
+                            <tr v-if="events.length == 0">
+                                <td colspan="8">
                                     <div class="py-6 text-xl text-gray-500">
                                         Sin eventos programados
                                     </div>

@@ -19,8 +19,9 @@ const ModalDeleteIsShowing = ref(false);
 const FileToDelete = ref({});
 const emptyFile = {
     id: null,
-    title: '',
+    name: '',
     filename: '',
+    type:'IMAGEN',
     file:'',
     avalible: true,
 }
@@ -89,7 +90,7 @@ const saveFile = () => {
 
 </script>
 <template>
-    <Head title="Profile" />
+    <Head name="Archivos" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -108,15 +109,16 @@ const saveFile = () => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
+                    class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
                 >
                     <table class="w-full text-center">
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
                                 <th>ID</th>
-                                <th>Titulo</th>
+                                <th>Nombre</th>
                                 <th>Filename</th>
-                                <th>¿Disponible?</th>
+                                <th>Tipo</th>
+                                <th>Disponible</th>
                                 <th>Fecha de actualización</th>
                                 <th class="w-1/5">Acciones</th>
                             </tr>
@@ -124,12 +126,13 @@ const saveFile = () => {
                         <tbody>
                             <tr v-for="f in files" class="border">
                                 <td>{{ f.id }}</td>
-                                <td>{{ f.title }}</td>
+                                <td>{{ f.name }}</td>
                                 <td>{{ f.filename }}</td>
-                                <td>{{ f.avalible }}</td>
+                                <td>{{ f.type }}</td>
+                                <td>{{ f.avalible ? 'Sí' : 'No' }}</td>
                                 <td>{{ dateFormat(f.updated_at) }}</td>
                                 <td>
-                                    <div class="flex gap-2">
+                                    <div class="flex gap-2 justify-center">
                                         <SecondaryButton @click="OpenModal($event,f)">
                                             Editar
                                         </SecondaryButton>
@@ -140,8 +143,8 @@ const saveFile = () => {
                                 </td>
                             </tr>
                             <tr v-if="files.length == 0">
-                                <td colspan="6">
-                                    <div class="py-12 text-xl text-gray-500">
+                                <td colspan="7">
+                                    <div class="py-6 text-xl text-gray-500">
                                         Sin archivos
                                     </div>
                                 </td>

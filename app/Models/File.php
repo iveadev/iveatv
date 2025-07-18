@@ -9,7 +9,8 @@ class File extends Model
     //
     protected $fillable = [
         'filename',
-        'title',
+        'type',
+        'name',
         'avalible',
         'url',
     ];
@@ -18,5 +19,5 @@ class File extends Model
         return [
             'avalible' => 'boolean',
         ];
-}
+    }
 }

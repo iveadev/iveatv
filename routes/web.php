@@ -5,7 +5,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\programationController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\EventController;
 
 Route::get('/', [BannerController::class, 'display'])->name('banner.display');
 Route::get('/old', [BannerController::class, 'old'])->name('banner.old');
@@ -16,9 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/banners', [BannerController::class, 'index'])->name('banner.index');
+    Route::get('/file/list', [FileController::class, 'getList'])->name('file.list');
     Route::post('/files/{id}', [FileController::class, 'update'])->name('file.update');
+    Route::resource('/event', EventController::class)->names('event');
     Route::resource('/files', FileController::class)->names('file');
-    Route::get('/dashboard', [BannerController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [programationController::class, 'index'])->name('dashboard');
     
 });
 

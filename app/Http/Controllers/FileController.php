@@ -32,8 +32,9 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $inputs = $request->validate([
-            'title' => 'required|unique:files|max:255',
+            'name' => 'required|unique:files|max:255',
             'file' => 'sometimes|file',
+            'type' => 'sometimes|string',
             'filename' => 'required|max:255|unique:files',
             'avalible' => 'boolean',
             'url' => 'sometimes|nullable',
@@ -71,9 +72,10 @@ class FileController extends Controller
     public function update(Request $request, string $id)
     {
         $inputs = $request->validate([
-            'title' => 'required|max:255',
+            'name' => 'required|max:255',
             'file' => 'sometimes|nullable|file',
             'filename' => 'required|max:255',
+            'type' => 'sometimes|string',
             'avalible' => 'boolean',
             'url' => 'sometimes|nullable',
         ]);
@@ -109,5 +111,13 @@ class FileController extends Controller
         $fileObj->delete();
         return redirect()->back();
 
+    }
+
+
+    /**
+     * Retorna la losta de archivos disponibles
+     */
+    function getList(){
+        return File::where('avalible',1)->get();
     }
 }

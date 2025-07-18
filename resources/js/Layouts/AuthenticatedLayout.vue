@@ -37,7 +37,29 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Dashboard
+                                    Programación
+                                </NavLink>
+                            </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('event.index')"
+                                    :active="route().current('event.index')"
+                                >
+                                    Eventos
+                                </NavLink>
+                            </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('file.index')"
+                                    :active="route().current('file.index')"
+                                >
+                                    Archivos
                                 </NavLink>
                             </div>
                         </div>
