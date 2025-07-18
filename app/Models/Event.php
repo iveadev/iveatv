@@ -22,6 +22,11 @@ class Event extends Model
         'file'
     ];
 
+    protected $hidden= [
+        'created_at',
+        'updated_at'
+    ];
+
     public function file(): BelongsTo {
          return $this->belongsTo(File::class);
     }

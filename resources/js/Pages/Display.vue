@@ -6,8 +6,10 @@ const props = defineProps({
     banner: {
         type: Object,
         default: {
-            type:'IMAGEN',
-            url:'/banner.png',
+            file:{
+                type:'IMAGEN',
+                url:'/banner.png',
+            },
             duration:'5',
         },
     },
@@ -82,15 +84,16 @@ const forceNext = () => {
 
 <template>
     <Head :title="banner.title" />
+    next = {{ next }}
     <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
         <Transition name="fade">
         <div v-if="!loading">
-            <div v-if="banner.type == 'IMAGEN'">
-                <img :src="banner.url" class="max-h-screen" @error="handleError" @load="showNext">
+            <div v-if="banner.file.type == 'IMAGEN'">
+                <img :src="banner.file.url" class="max-h-screen" @error="handleError" @load="showNext">
             </div>
-            <div v-if="banner.type == 'VIDEO'" class="bg-black">
+            <div v-if="banner.file.type == 'VIDEO'" class="bg-black">
                 <video id="videoplayer" autoplay controls muted @ended="goToNext">
-                    <source :src="banner.url" type="video/mp4" @error="handleError"> 
+                    <source :src="banner.file.url" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
                 </video> 
             </div>

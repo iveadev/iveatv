@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Banner;
+use App\Models\Programation;
+use App\Models\Event;
 use Inertia\Inertia;
 
 class BannerController extends Controller
@@ -21,40 +22,48 @@ class BannerController extends Controller
 
     function getProps ($request) {
         $id = $request->get('id') ?? null;
+        $date = $request->get('date') ?? date('Y-m-d');
         $props = [];
+        $toShow = null;
 
         if(isset($id)){
-            $props['banner'] = Banner::find($id);
-        } else {
-            $props['banner'] = [
-                'type' => 'IMAGEN',
-                'url' => '/banner.png',
-                'title' => 'Inicio',
-                'duration' => 5,
+            $toShow = Programation::find($id);
+        }
+        if(!isset($toShow)) {
+            $toShow = [
+                'event' => [
+                    'title' => 'Inicio',
+                    'duration' => 5,
+                    'file' => [
+                        'type' => 'IMAGEN',
+                        'url' => '/banner.png',
+                    ]
+                ]
             ];
-            $have_visibles = $this->getBaseQuery(date("Y-m-d H:i:s"));
-            if($have_visibles->where('visible',1)->count() == 0){
+        }
+
+        $props['banner'] = $toShow['event'];
+            $have_visibles = Programation::where('date', $date)->where('visible',1)->count();
+            if($have_visibles == 0){
                 $props['banner']['duration']= 30;
                 $props['empty'] = true;
             }
-        }
+        
 
-        $next = $this->getNext($id);
+        $next = $this->getNext($id, $date);
         if(isset($next)){
             $props['next'] = $next->id;
         }
+        
         return $props;
     }
 
-    function getBaseQuery($date) {
-        return Banner::where('visible', 1)
-                ->where('visibleFrom','<=', $date)
-                ->where('visibleTo','>=', $date);
-    }
-
-
-    function getNext($id = null){
-        $next = $this->getBaseQuery(date("Y-m-d H:i:s"));
+    function getNext($id = null, $date){
+        $today =date('y-m-d');
+        $next = Programation::where('date', $date)->where('visible',1);
+        if($today == $date) {
+            //agrega la vigencia por hora
+        }
         if(isset($id)) {
             $next->where('id','>',$id);
         }
