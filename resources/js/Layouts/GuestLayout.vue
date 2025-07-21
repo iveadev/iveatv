@@ -6,7 +6,7 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
         <div>
-            <Link :href="route('player')" class="text-white fixed top-0 bg-green-700 w-full p-5 shadow-xl justify-center text-3xl text-center" title="Iniciar reproducción">
+            <Link :href="route('banner.display')" class="text-white fixed top-0 bg-green-700 w-full p-5 shadow-xl justify-center text-3xl text-center" title="Iniciar reproducción">
                 <FontAwesomeIcon icon="fa fa-play" class="self-center" />
             </Link>
         </div>
