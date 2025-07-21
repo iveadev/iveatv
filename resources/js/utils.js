@@ -4,7 +4,8 @@ const formatoFecha = new Intl.DateTimeFormat('es-MX', {
     //timeStyle: "short",
     timeZone: "America/Mexico_city",
   });
-const _d = new Date(d+'T00:00');
+
+const _d = d.length == 10 ? new Date(d+'T00:00') : new Date(d);
 const str = formatoFecha.format(_d);
 return str;
 }
