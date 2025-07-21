@@ -138,7 +138,7 @@ const pickDate = () => {
                                 <td>{{ index +1 }}</td>
                                 <td class="font-bold">{{ banner.event.file.name }}</td>
                                 <td>{{ banner.event.file.type }}</td>
-                                <td>{{ banner.event.duration }} s.</td>
+                                <td>{{ banner.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center">

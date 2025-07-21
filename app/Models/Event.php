@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
@@ -31,6 +32,10 @@ class Event extends Model
          return $this->belongsTo(File::class);
     }
 
+    public function programation(): HasMany {
+         return $this->hasMany(Programation::class);
+    }
+
     public function getDateRange() {
         $format = 'y-m-d';
         $from = date_create($this->visibleFrom);
@@ -49,5 +54,10 @@ class Event extends Model
             'visible' => 'boolean',
             'duration' => 'string',
         ];
+    }
+
+    function destroyRelatedProgramation() {
+        $ids = $this->programation->select('id')->flatten();
+        programation::whereIn('id',$ids)->delete();
     }
 }

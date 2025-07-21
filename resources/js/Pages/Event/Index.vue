@@ -20,6 +20,8 @@ const props = defineProps({
 })
 
 const eventModalIsShowing = ref(false)
+const ModalDeleteIsShowing = ref(false);
+
 const emptyevent = {
     id: null,
     title:'',
@@ -31,6 +33,7 @@ const emptyevent = {
 }
 
 const event = useForm(emptyevent)
+const EventToDelete = ref({})
 
 const openeventModal = (evt, _event)=>{
     event.defaults({...emptyevent})
@@ -41,17 +44,17 @@ const openeventModal = (evt, _event)=>{
     eventModalIsShowing.value = true
 }
 
-const closeeventModal = () => {
+const closeEventModal = () => {
     eventModalIsShowing.value = false
     event.defaults({...emptyevent})
     event.reset()
 }
 
-const saveevent = () => {
+const saveEvent = () => {
     if(event.id){
         event.put(route('event.update', event.id),{
             onSuccess:() => {
-                closeeventModal()
+                closeEventModal()
             }
         })
     } else {
@@ -60,10 +63,31 @@ const saveevent = () => {
                 event.errors = e;
             },
             onSuccess:() => {
-                closeeventModal()
+                closeEventModal()
             }
         })
     }
+}
+
+const openDeleteModal = (f) => {
+    ModalDeleteIsShowing.value = true
+    EventToDelete.value = {...f}
+}
+
+const closeDeleteModal = () => {
+    EventToDelete.value = {}
+    ModalDeleteIsShowing.value = false
+}
+const deleteFile = () => {
+    event.reset();
+    event.id = EventToDelete.value.id;
+    event.delete(route('event.destroy',event.id), {
+        onSuccess:()=>{
+            event.reset();
+            closeDeleteModal();
+        }
+    })
+    
 }
 
 </script>
@@ -129,7 +153,7 @@ const saveevent = () => {
                                         <SecondaryButton @click="openeventModal($event, event)" title="Editar evento">
                                             <FontAwesomeIcon icon="fa fa-pencil" class="text-lg"/>
                                         </SecondaryButton>
-                                        <SecondaryButton title="Eliminar">
+                                        <SecondaryButton title="Eliminar" @click="openDeleteModal(event)">
                                             <span class="text-red-500 text-lg">
                                                 <FontAwesomeIcon icon="fa fa-trash" />
                                             </span>
@@ -150,7 +174,7 @@ const saveevent = () => {
             </div>
         </div>
 
-        <Modal :show="eventModalIsShowing" closeable @close="closeeventModal" max-width="4xl">
+        <Modal :show="eventModalIsShowing" closeable @close="closeEventModal" max-width="4xl">
             <template #header>
                 event
             </template>
@@ -158,16 +182,33 @@ const saveevent = () => {
                 <EventForm v-model="event"></EventForm>
             </div>
             <template #actions>
-                <PrimaryButton :disabled="!event.isDirty" class="disabled:bg-gray-300" @click="saveevent">
+                <PrimaryButton :disabled="!event.isDirty" class="disabled:bg-gray-300" @click="saveEvent">
                     Guardar
                 </PrimaryButton>
-                <SecondaryButton @click="closeeventModal">
+                <SecondaryButton @click="closeEventModal">
                     Cancelar
                 </SecondaryButton>
             </template>
 
         </Modal>
     </AuthenticatedLayout>
+    <Modal :show="ModalDeleteIsShowing" closeable type="danger" @close="closeDeleteModal">
+            <template #header>
+                Borrando archivo
+            </template>
+            <div class="text-center py-6">
+                <p class="font-bold">¿Deseas continuar?</p>
+                <p>Se eliminará el evento y la programación asociada.</p>
+            </div>
+            <template #actions>
+                <PrimaryButton @click="deleteFile">
+                    Eliminar
+                </PrimaryButton>
+                <SecondaryButton @click="closeDeleteModal">
+                    Cancelar
+                </SecondaryButton>
+            </template>
+        </Modal>
 </template>
 
 <style scoped>

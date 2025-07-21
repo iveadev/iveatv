@@ -52,9 +52,8 @@ const closeDeleteModal = () => {
     ModalDeleteIsShowing.value = false
 }
 const deleteFile = () => {
-    file.reset();
     file.id = FileToDelete.value.id;
-    file.delete(route('file.update',file.id), {
+    file.delete(route('file.destroy',file.id), {
         onSuccess:()=>{
             file.reset();
             closeDeleteModal();
@@ -179,9 +178,9 @@ const saveFile = () => {
             <template #header>
                 Borrando archivo
             </template>
-            <div class="text-center p-6">
+            <div class="text-center py-6">
+                <p class="font-bold">¿Deseas continuar?</p>
                 <p>Se eliminará el archivo y los eventos asociados</p>
-                <p class="font-bold p-2">¿Deseas continuar?</p>
             </div>
             <template #actions>
                 <PrimaryButton @click="deleteFile">

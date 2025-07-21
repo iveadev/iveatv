@@ -6,13 +6,6 @@ import { onMounted, onUpdated, ref, watch } from 'vue';
 const props = defineProps({
     banner: {
         type: Object,
-        default: {
-            file:{
-                type:'IMAGEN',
-                url:'/banner.png',
-            },
-            duration:'5',
-        },
     },
     empty: {
         type: Boolean,

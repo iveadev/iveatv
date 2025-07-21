@@ -31,9 +31,9 @@ class BannerController extends Controller
         }
         if(!isset($toShow)) {
             $toShow = [
+                'duration' => 5,
                 'event' => [
                     'title' => 'Inicio',
-                    'duration' => 5,
                     'file' => [
                         'type' => 'IMAGEN',
                         'url' => '/banner.png',
@@ -43,11 +43,12 @@ class BannerController extends Controller
         }
 
         $props['banner'] = $toShow['event'];
-            $have_visibles = Programation::where('date', $date)->where('visible',1)->count();
-            if($have_visibles == 0){
-                $props['banner']['duration']= 30;
-                $props['empty'] = true;
-            }
+        $props['banner']['duration']= $toShow['duration'];
+        $have_visibles = Programation::where('date', $date)->where('visible',1)->count();
+        if($have_visibles == 0){
+            $props['banner']['duration']= 30;
+            $props['empty'] = true;
+        }
         
 
         $next = $this->getNext($id, $date);

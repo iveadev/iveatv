@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\File;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+
+use App\Models\File;
+use App\Models\Event;
+use App\Models\Programation;
 
 class FileController extends Controller
 {
@@ -108,14 +111,20 @@ class FileController extends Controller
         //
         $fileObj = File::find($id);
         Storage::delete($fileObj->filename);
+        $evts = Event::where('file_id',$id)->get();
+        $ids = $evts->select('id')->flatten();
+
+        Programation::whereIn('event_id',$ids)->delete();
+        Event::whereIn('id',$ids)->delete();
         $fileObj->delete();
+
         return redirect()->back();
 
     }
 
 
     /**
-     * Retorna la losta de archivos disponibles
+     * Retorna la lista de archivos disponibles
      */
     function getList(){
         return File::where('avalible',1)->get();

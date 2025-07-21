@@ -48,6 +48,7 @@ class EventController extends Controller
                 'date' => $date,
                 'event_id' => $event->id,
                 'visible' => $event->visible,
+                'duration' => $event->duration,
             ]);
         }
         return redirect()->back();
@@ -89,31 +90,27 @@ class EventController extends Controller
         $previous_range = $event->getDateRange();
         $event->update($validated);
         $range = $event->getDateRange();
-
         //Se eliminan las programaciones fuera de las fechas de vigencia
         Programation::where('event_id', $event->id)
             ->whereNotIn('date',$range)
             ->delete();
         
-        // se actualizan los que quedan
-        Programation::where('event_id', $event->id)
-            ->whereIn('date',$range)
-            ->update(['visible' => $event->visible]);
-        
-        // Se crean los eventos faltantes
-        $toCreate = array_diff($range, $previous_range);
-        foreach ($toCreate as $date) {
+        //Se crea si no está la programación
+        foreach ($range as $date) {
             $prog = Programation::firstOrCreate([
                 'date' => $date,
                 'event_id' => $event->id,
+            ]);
+            // Se actualizan los valores de la programación
+            $prog->update([
                 'visible' => $event->visible,
+                'duration' => $event->duration,
+                
             ]);
         }
+            
 
-        //Se eliminan las programaciones fuera de las fechas de vigencia
-        Programation::where('event_id', $event->id)
-            ->whereNotIn('date',$range)
-            ->delete();
+        return redirect()->back();
         
     }
 
@@ -124,5 +121,9 @@ class EventController extends Controller
     public function destroy(string $id)
     {
         //
+        $event = Event::findOrFail($id);
+        $event->destroyRelatedProgramation();
+        $event->delete();
+        return redirect()->back();
     }
 }
