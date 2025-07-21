@@ -47,6 +47,7 @@ class Event extends Model
     {
         return [
             'visible' => 'boolean',
+            'duration' => 'string',
         ];
     }
 }

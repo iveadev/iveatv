@@ -7,6 +7,7 @@ import { dateFormat } from '@/utils';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import EventForm from './Partials/EventForm.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
     events:{
@@ -25,8 +26,8 @@ const emptyevent = {
     file_id:'',
     duration:'10',
     visible: false,
-    visibleFrom: props.today+'T00:00',
-    visibleTo: props.today+'T23:59',
+    visibleFrom: props.today,
+    visibleTo: props.today,
 }
 
 const event = useForm(emptyevent)
@@ -34,7 +35,6 @@ const event = useForm(emptyevent)
 const openeventModal = (evt, _event)=>{
     event.defaults({...emptyevent})
     if(_event){
-        console.log('hay')
         event.defaults({..._event})
     }
     event.reset()
@@ -56,6 +56,9 @@ const saveevent = () => {
         })
     } else {
         event.post(route('event.store'),{
+            onError:(e) => {
+                event.errors = e;
+            },
             onSuccess:() => {
                 closeeventModal()
             }
@@ -84,7 +87,6 @@ const saveevent = () => {
 
         <div class="p-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-
                 <div
                     class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
                 >
@@ -92,36 +94,45 @@ const saveevent = () => {
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
                                 <th>ID</th>
-                                <th>Título</th>
                                 <th>Archivo</th>
-                                <th>Duración (seg.)</th>
-                                <th>Visible</th>
-                                <th>Vigencia</th>
-                                <th class="w-1/5">Acciones</th>
+                                <th title="Duración (en segundos)">
+                                    <FontAwesomeIcon icon="fa fa-clock" />
+                                </th>
+                                <th title="En proyección">
+                                    <FontAwesomeIcon icon="fa fa-display" class="self-center"/>
+                                </th>
+                                <th class="w-48">Vigencia</th>
+                                <th class="w-48">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(event, index) in events" class="h-10 border">
                                 <td>{{ event.id }}</td>
-                                <td>{{ event.title }}</td>
                                 <td>
                                     <p class="font-bold py-2">{{ event.file.name }}</p>
                                     <p>{{ event.file.type }}</p>
-                                    <p class="text-sm text-gray-600">({{ event.file.url }})</p>
                                 </td>
-                                <td>{{ event.duration }}</td>
+                                <td>{{ event.duration }} s.</td>
                                 <td>{{ event.visible ? 'Sí' : 'No' }}</td>
                                 <td>
-                                    <p><span class="font-bold">De:</span> {{ dateFormat(event.visibleFrom) }}</p>
-                                    <p><span class="font-bold">A  :</span> {{ dateFormat(event.visibleTo) }}</p>
+                                    <div class="flex gap-2">
+                                        <span class="font-bold w-20">Desde:</span>
+                                        <span>{{ dateFormat(event.visibleFrom) }}</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <span class="font-bold w-20">hasta:</span>
+                                        <span>{{ dateFormat(event.visibleTo) }}</span>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="flex gap-2 justify-center">
-                                        <SecondaryButton @click="openeventModal($event, event)">
-                                            Editar
+                                        <SecondaryButton @click="openeventModal($event, event)" title="Editar evento">
+                                            <FontAwesomeIcon icon="fa fa-pencil" class="text-lg"/>
                                         </SecondaryButton>
-                                        <SecondaryButton>
-                                            <span class="text-red-500">Eliminar</span>
+                                        <SecondaryButton title="Eliminar">
+                                            <span class="text-red-500 text-lg">
+                                                <FontAwesomeIcon icon="fa fa-trash" />
+                                            </span>
                                         </SecondaryButton>
                                     </div>
                                 </td>
@@ -143,7 +154,7 @@ const saveevent = () => {
             <template #header>
                 event
             </template>
-            <div class="p-5">
+            <div class="p-6">
                 <EventForm v-model="event"></EventForm>
             </div>
             <template #actions>

@@ -7,6 +7,8 @@ import { dateFormat } from '@/utils';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import EventForm from './Profile/Partials/EventForm.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
     banners:{
@@ -60,8 +62,14 @@ const saveevent = () => {
     })
 }
 
+const pickedDate =ref(props.today)
+
 const goToDay = (day) => {
     router.visit(route(route().current(),{date: day}))
+}
+
+const pickDate = () => {
+    goToDay(pickedDate.value)
 }
 
 </script>
@@ -85,13 +93,25 @@ const goToDay = (day) => {
 
                 <div class="grid grid-cols-3 gap-5 py-4">
                     <div>
-                        <SecondaryButton @click="goToDay(previousDay)">Anterior</SecondaryButton>
+                        <SecondaryButton @click="goToDay(previousDay)">
+                            <div class="flex gap-2">
+                                <FontAwesomeIcon icon="fa fa-chevron-left" class="self-center" />
+                                Anterior
+                            </div>
+                        </SecondaryButton>
                     </div>
                     <button type="button" class="px-3 rounded" title="Seleccionar otra fecha">
-                        <b class="text-red-800 text-center">{{today}}</b>
+                        <b class="text-red-800 text-center">
+                            <TextInput v-model="pickedDate" type="date" @change="pickDate"/>
+                        </b>
                     </button>
                     <div class="grid justify-items-end">
-                        <SecondaryButton @click="goToDay(nextDay)">Siguiente</SecondaryButton>
+                        <SecondaryButton @click="goToDay(nextDay)">
+                            <div class="flex gap-2">
+                                Siguiente
+                                <FontAwesomeIcon icon="fa fa-chevron-right" class="self-center" />
+                            </div>
+                        </SecondaryButton>
                     </div>
                 </div>
 
@@ -104,25 +124,31 @@ const goToDay = (day) => {
                                 <th>Orden</th>
                                 <th>Título</th>
                                 <th>Tipo de contenido</th>
-                                <th>Duración (seg.)</th>
-                                <th>¿Visible?</th>
+                                <th title="Duración (en segundos)">
+                                    <FontAwesomeIcon icon="fa-clock" />
+                                </th>
+                                <th title="En proyección">
+                                    <FontAwesomeIcon icon="fa-display" />
+                                </th>
                                 <th class="w-1/5">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(banner, index) in banners" class="h-10 border">
                                 <td>{{ index +1 }}</td>
-                                <td class="font-bold">{{ banner.event.title }}</td>
+                                <td class="font-bold">{{ banner.event.file.name }}</td>
                                 <td>{{ banner.event.file.type }}</td>
-                                <td>{{ banner.event.duration }}</td>
+                                <td>{{ banner.event.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center">
                                         <SecondaryButton @click="openeventModal($event, banner)">
-                                            Editar
+                                            <FontAwesomeIcon icon="fa-pencil" class="text-lg" />
                                         </SecondaryButton>
                                         <SecondaryButton>
-                                            <span class="text-red-500">Eliminar</span>
+                                            <span class="text-red-500">
+                                                <FontAwesomeIcon icon="fa-trash" class="text-lg" />
+                                            </span>
                                         </SecondaryButton>
                                     </div>
                                 </td>

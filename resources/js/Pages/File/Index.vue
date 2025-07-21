@@ -7,6 +7,7 @@ import { ref } from 'vue';
 import FileForm from './FileForm.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { dateFormat } from '@/utils';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
     files:{
@@ -67,7 +68,6 @@ const saveFile = () => {
         file.post(route('file.update',file.id), {
             _method: 'put',
             onError:(errors) =>{
-                console.log(errors)
                 file.errors = errors
             },
             onSuccess:() =>{
@@ -120,7 +120,7 @@ const saveFile = () => {
                                 <th>Tipo</th>
                                 <th>Disponible</th>
                                 <th>Fecha de actualización</th>
-                                <th class="w-1/5">Acciones</th>
+                                <th class="w-48">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,10 +134,12 @@ const saveFile = () => {
                                 <td>
                                     <div class="flex gap-2 justify-center">
                                         <SecondaryButton @click="OpenModal($event,f)">
-                                            Editar
+                                            <FontAwesomeIcon icon="fa-pencil" class="text-lg" />
                                         </SecondaryButton>
                                         <SecondaryButton @click="openDeleteModal(f)">
-                                            <span class="text-red-500">Borrar</span>
+                                            <span class="text-red-500">
+                                                <FontAwesomeIcon icon="fa-trash" class="text-lg" />
+                                            </span>
                                         </SecondaryButton>
                                     </div>
                                 </td>

@@ -16,7 +16,7 @@ class EventController extends Controller
     {
         //
         $events = Event::all();
-        return Inertia::render('Event/Index',['events' => $events]);
+        return Inertia::render('Event/Index',['events' => $events, 'today' => date('Y-m-d')]);
     }
 
     /**
@@ -34,7 +34,6 @@ class EventController extends Controller
     {
         //
         $validated = $request->validate([
-            'title' => 'string',
             'file_id' => 'required|exists:files,id',
             'visible' => 'boolean',
             'duration' => 'integer',
@@ -78,7 +77,6 @@ class EventController extends Controller
     {
         //
         $validated = $request->validate([
-            'title' => 'string',
             'file_id' => 'required|exists:files,id',
             'visible' => 'boolean',
             'duration' => 'integer',

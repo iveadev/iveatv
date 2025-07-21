@@ -1,5 +1,6 @@
 <script setup>
 import Checkbox from '@/Components/Checkbox.vue';
+import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import axios from 'axios';
@@ -18,40 +19,40 @@ onMounted(()=> {
 
 </script>
 <template>
-    <div class="grid gap-2">
-        <div class="grid gap-1">
-            <InputLabel value="Título" />
-            <TextInput v-model="event.title" placeholder="Título del evento"/>
-        </div>
-        <div class="flex gap-2">
-            <div class="flex-1 grid gap-1">
+    <div class="flex flex-col gap-2">
+        <div class="flex gap-3">
+            <div class="flex-1 flex flex-col gap-1">
                 <InputLabel value="Archivo" />
-                <select required class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Seleccione" v-model="event.file_id">
+                <select required class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 w-full" placeholder="Seleccione" v-model="event.file_id">
                     <option disabled selected>Selecciones uno</option>
-                    <option v-for="f in files" :value="f.id"><span class="font-bold">{{ f.name }}</span> ({{ f.type }} -- {{ f.filename }})</option>
+                    <option v-for="f in files" :value="f.id">{{ f.type }} -- {{ f.name }}</option>
                 </select>
+                <InputError :message="event.errors.file_id" />
             </div>
-            <div class="grid gap-1">
-                <InputLabel value="Duración" />
-                <div class="flex gap-3">
-                    <TextInput v-model="event.duration" type="number" step="5" min="0"/>
-                    <span class="self-center text-gray-500">segundos</span>
+            <div class=" w-32 flex flex-col gap-1">
+                <InputLabel value="Segundos" />
+                <TextInput v-model="event.duration" type="number" step="5" min="0"/>
+                <InputError :message="event.errors.duration" />
+            </div>
+            <div class="w-20 flex-col gap-1">
+                <InputLabel value="Proyectando"/>
+                <div class="flex gap-4 pt-3">
+                    <Checkbox v-model:checked="event.visible" class="self-center" />
+                    <span class="self-center">{{ event.visible ? 'Sí' : 'No' }}</span>
                 </div>
             </div>
         </div>
         <div class="flex gap-2">
-            <div class="w-20 grid gap-1">
-                <InputLabel value="Visible"/>
-                <Checkbox v-model:checked="event.visible"></Checkbox>
-            </div>
-            <div class="flex-1 grid gap-1">
+            <div class="flex-1 flex flex-col gap-1">
                 <InputLabel value="Visible desde"/>
-                <TextInput required v-model="event.visibleFrom" type="datetime-local"/>
+                <TextInput required v-model="event.visibleFrom" type="date"/>
+                <InputError :message="event.errors.visibleFrom" />
             </div>
 
-            <div class="flex-1 grid gap-1">
+            <div class="flex-1 flex flex-col gap-1">
                 <InputLabel value="Visible hasta"/>
-                <TextInput required v-model="event.visibleTo" type="datetime-local"/>
+                <TextInput required v-model="event.visibleTo" type="date"/>
+                <InputError :message="event.errors.visibleTo" />
             </div>
         </div>
     </div>

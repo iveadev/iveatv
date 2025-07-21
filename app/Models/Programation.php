@@ -12,6 +12,7 @@ class Programation extends Model
     protected $fillable = [
         'date',
         'event_id',
+        'visible',
         'order',
     ];
     protected $with = [

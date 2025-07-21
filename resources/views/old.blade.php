@@ -26,12 +26,12 @@
 </head>
 <body>
     <div class="container" class="container">
-        @if ($banner['type'] == 'IMAGEN')
-            <img src="{{$banner['url']}}" class="img">
+        @if ($banner['file']['type'] == 'IMAGEN')
+            <img src="{{$banner['file']['url']}}" class="img">
         @endif
 
-        @if ($banner['type'] == 'VIDEO')
-            <video autoplay src="{{$banner['url']}}" />
+        @if ($banner['file']['type'] == 'VIDEO')
+            <video autoplay src="{{$banner['file']['url']}}" />
         @endif
     </div>
 </body>

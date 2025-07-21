@@ -9,7 +9,10 @@ use App\Http\Controllers\programationController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\EventController;
 
-Route::get('/', [BannerController::class, 'display'])->name('banner.display');
+Route::get('/', function () {
+    return redirect('dashboard');
+})->name('home');
+Route::get('/show', [BannerController::class, 'display'])->name('banner.display');
 Route::get('/old', [BannerController::class, 'old'])->name('banner.old');
 
 Route::middleware('auth')->group(function () {

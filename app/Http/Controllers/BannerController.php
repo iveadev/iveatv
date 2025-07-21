@@ -15,10 +15,10 @@ class BannerController extends Controller
         return Inertia::render('Display', $props);
     }
 
-    // function old(Request $request){
-    //     $props = $this->getProps($request);
-    //     return view('old', $props);
-    // }
+    function old(Request $request){
+        $props = $this->getProps($request);
+        return view('old', $props);
+    }
 
     function getProps ($request) {
         $id = $request->get('id') ?? null;

@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->integer('file_id');
             $table->integer('duration')->comment('en segundos');
             $table->boolean('visible')->default(0);
-            $table->datetime('visibleFrom');
-            $table->datetime('visibleTo');
+            $table->date('visibleFrom');
+            $table->date('visibleTo');
             $table->integer('order')->default(0);
             $table->timestamps();
         });

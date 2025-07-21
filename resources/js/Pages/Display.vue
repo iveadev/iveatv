@@ -1,4 +1,5 @@
 <script setup>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { onMounted, onUpdated, ref, watch } from 'vue';
 
@@ -24,7 +25,7 @@ const props = defineProps({
 })
 const loading = ref(true)
 const haveError = ref(false)
-const waiting = ref(1000);
+const waiting = ref(500);
 
 const nextBanner = ref(props.next)
 
@@ -84,7 +85,6 @@ const forceNext = () => {
 
 <template>
     <Head :title="banner.title" />
-    next = {{ next }}
     <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
         <Transition name="fade">
         <div v-if="!loading">
@@ -92,7 +92,7 @@ const forceNext = () => {
                 <img :src="banner.file.url" class="max-h-screen" @error="handleError" @load="showNext">
             </div>
             <div v-if="banner.file.type == 'VIDEO'" class="bg-black">
-                <video id="videoplayer" autoplay controls muted @ended="goToNext">
+                <video id="videoplayer" autoplay controls @ended="goToNext" class="max-h-screen">
                     <source :src="banner.file.url" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
                 </video> 
@@ -107,9 +107,19 @@ const forceNext = () => {
                     <div class="p-4 flex gap-2">
                         <h2 class="w-1/4 text-3xl font-bold p-3">{{ banner.id }}</h2>
                         <div class="flex-1 border-l px-5 text-center">
-                            <p class="text-xl">Título: <b>{{ banner.title }}</b></p>
-                            <p class="text-xl">Url: <b>{{ banner.url }}</b></p>
+                            <p class="text-xl">Título: <b>{{ banner.file.name }}</b></p>
+                            <p class="text-xl">Url: <b>{{ banner.file.url }}</b></p>
                         </div>
+                    </div>
+                </div>
+                <div class="text-white fixed bottom-5 left-5">
+                    <div v-if="props.empty & loading">
+                        <span class="text-sm text-white/40">Developed by :</span>
+                        <p class="text-3xl">Instituto Veracruzano de Educación para los Adultos</p>
+                        <p class="font-bold text-lg">Departamento de Tecnologías de la Información</p>
+                        <p class="text-sm text-white pt-5">
+                            <span class="font-bold">Cesariux23</span>
+                        </p>
                     </div>
                 </div>
                 <div class="fixed bottom-10 right-10 text-white grid justify-items-center" v-if="loading">
@@ -121,20 +131,19 @@ const forceNext = () => {
                     <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="reloadPage">
                         <div class="hover:text-white p-6 hover:bg-blue-500/40 rounded-xl">
                             <div class="text-7xl">
-                                R
+                                <FontAwesomeIcon icon="fa fa-rotate-right" />
                             </div>
                         </div>
                     </button>
                     <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="forceNext">
                         <div class="hover:text-white p-6 hover:bg-green-500/40 rounded-xl">
                             <div class="text-7xl">
-                                >
+                                <FontAwesomeIcon icon="fa fa-chevron-right" />
                             </div>
                         </div>
                     </button>
                 </div>
             </div>
-            
         </Transition>
     </main>
 </template>
