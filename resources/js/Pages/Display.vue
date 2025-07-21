@@ -112,14 +112,18 @@ const forceNext = () => {
                         </div>
                     </div>
                 </div>
-                <div class="text-white fixed bottom-5 left-5">
+                <div class="text-white fixed bottom-10 left-10">
                     <div v-if="props.empty & loading">
-                        <span class="text-sm text-white/40">Developed by :</span>
-                        <p class="text-3xl">Instituto Veracruzano de Educación para los Adultos</p>
-                        <p class="font-bold text-lg">Departamento de Tecnologías de la Información</p>
-                        <p class="text-sm text-white pt-5">
-                            <span class="font-bold">Cesariux23</span>
-                        </p>
+                        <p class="text-5xl py-2">Instituto Veracruzano de Educación para los Adultos</p>
+                        <div class="flex gap-4 text-md text-white/40">
+                            <a href="https://github.com/cesariux23" target="_blank" class="flex gap-2">
+                                <FontAwesomeIcon icon="fa fa-code" class="self-center text-2xl font-bold" />
+                                <span>Developed by :</span>
+                                <span class="font-bold">Departamento de Tecnologías de la Información</span>
+                            </a>
+                            
+                        </div>
+                        
                     </div>
                 </div>
                 <div class="fixed bottom-10 right-10 text-white grid justify-items-center" v-if="loading">
@@ -161,7 +165,7 @@ const forceNext = () => {
 
     .pulse-enter-active,
     .pulse-leave-active {
-      transition: transform 0.5s ease;
+      transition: transform 0.2s ease;
     }
 
     .pulse-enter-from,
@@ -177,7 +181,7 @@ const forceNext = () => {
     /* Additional keyframes for continuous pulsing */
     @keyframes continuous-pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(0.6); }
+      50% { transform: scale(0.8); }
       100% { transform: scale(1); }
       
     }
