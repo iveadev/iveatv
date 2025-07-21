@@ -90,7 +90,7 @@ const saveFile = () => {
 
 </script>
 <template>
-    <Head name="Archivos" />
+    <Head title="Archivos" />
 
     <AuthenticatedLayout>
         <template #header>
