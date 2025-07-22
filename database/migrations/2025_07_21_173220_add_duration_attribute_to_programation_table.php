@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('programations', function (Blueprint $table) {
             //
-            $table->integer('duration')->after('event_id');
+            $table->integer('duration')->after('event_id')->default(0);
         });
     }
 
