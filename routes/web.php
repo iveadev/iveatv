@@ -31,11 +31,4 @@ Route::middleware('auth')->group(function () {
     
 });
 
-// Route::get('/streaming', function () {
-//     $path = public_path('storage/ENTREVISTATUXPANAndresFHD.mp4');
-//     $stream = new VideoStream($path);
-//     $stream->start();
-// });
-
-
 require __DIR__.'/auth.php';

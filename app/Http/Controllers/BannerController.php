@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Programation;
 use App\Models\Event;
+use App\Models\File;
 use Inertia\Inertia;
 use App\Models\VideoStream;
 
@@ -73,9 +74,9 @@ class BannerController extends Controller
     }
 
     function getStreaming($id){
-        $prog = Programation::find($id);
-        $path = public_path($prog->event->file->url);
+        $file = File::find($id);
+        $path = public_path($file->url);
         $stream = new VideoStream($path);
-        return $stream->start();
+        $stream->start();
     }
 }

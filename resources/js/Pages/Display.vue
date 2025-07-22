@@ -85,7 +85,7 @@ const forceNext = () => {
             </div>
             <div v-if="banner.file.type == 'VIDEO'" class="bg-black">
                 <video id="videoplayer" autoplay muted controls @ended="goToNext" class="max-h-screen">
-                    <source :src="route('streaming',banner.id)" type="video/mp4" @error="handleError"> 
+                    <source :src="route('streaming',banner.file.id)" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
                 </video> 
             </div>

@@ -8,7 +8,7 @@
 
  namespace App\Models;
 
- 
+
 class VideoStream
 {
 	private $path = "";
@@ -39,6 +39,7 @@ class VideoStream
 	 *           */
 	private function setHeader()
 	{
+		session_write_close();
 		ob_get_clean();
 		header("Content-Type: video/mp4");
 		header("Cache-Control: max-age=2592000, public");
@@ -111,7 +112,7 @@ class VideoStream
 				$bytesToRead = $this->end - $i + 1;
 			}
 			$data = fread($this->stream, $bytesToRead);
-			echo $data;
+			print( $data );
 			flush();
 			$i += $bytesToRead;
 		}
