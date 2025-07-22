@@ -28,34 +28,33 @@ const props = defineProps({
     }
 })
 
-const eventModalIsShowing = ref(false)
-const emptyevent = {
+const programationModalIsShowing = ref(false)
+const emptyProgramation = {
     id: null,
     event_id:'',
     duration:'10',
     visible: false
 }
 
-const event = useForm(emptyevent)
+const programation = useForm(emptyProgramation)
 
-const openeventModal = (evt, _event)=>{
-    event.defaults({...emptyevent})
+const openProgramationModal = (evt, _event)=>{
+    programation.defaults({...emptyProgramation})
     if(_event){
-        console.log('hay')
-        event.defaults({..._event})
+        programation.defaults({..._event})
     }
-    event.reset()
-    eventModalIsShowing.value = true
+    programation.reset()
+    programationModalIsShowing.value = true
 }
 
 const closeeventModal = () => {
-    eventModalIsShowing.value = false
-    event.defaults({...emptyevent})
-    event.reset()
+    programationModalIsShowing.value = false
+    programation.defaults({...emptyProgramation})
+    programation.reset()
 }
 
-const saveevent = () => {
-    event.post(route('event.store'),{
+const saveProgramation = () => {
+    programation.post(route('programation.store'),{
         onSuccess:() => {
             closeeventModal()
         }
@@ -137,7 +136,7 @@ const pickDate = () => {
                                 <td>{{ index +1 }}</td>
                                 <td class="font-bold">
                                     <div class="flex gap-3">
-                                        <FontAwesomeIcon :icon="'fa fa-'+ banner.event.file.type == 'VIDEO' ? 'video':'image'" class="self-center text-gray-500" />
+                                        <FontAwesomeIcon :icon="'fa fa-'+ (banner.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
                                         {{ banner.event.file.type }}
                                     </div>
                                     {{ banner.event.file.name }}
@@ -147,7 +146,7 @@ const pickDate = () => {
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center">
-                                        <SecondaryButton @click="openeventModal($event, banner)">
+                                        <SecondaryButton @click="openProgramationModal($event, banner)">
                                             <FontAwesomeIcon icon="fa-pencil" class="text-lg" />
                                         </SecondaryButton>
                                         <SecondaryButton>
@@ -171,35 +170,36 @@ const pickDate = () => {
             </div>
         </div>
 
-        <Modal :show="eventModalIsShowing" closeable @close="closeeventModal" max-width="md">
+        <Modal :show="programationModalIsShowing" closeable @close="closeeventModal" max-width="md">
             <template #header>
                 {{ dateFormat(today) }}
             </template>
-            <div class="text-center py-3 bg-blue-200 border-blue-200">
-                <p class="font-bold">Archivo:</p>
-                <p>{{ event.event.file.name }}</p>
+            <div class="py-3 bg-amber-200 text-amber-800 flex gap-2">
+                <div class="w-20 text-right">Archivo:</div>
+                <FontAwesomeIcon :icon="'fa fa-'+ (programation.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center" />
+                <div class="font-bold">{{ programation.event.file.name }}</div>
             </div>
             <div class="p-5">
                 <div class="flex gap-4">
                     <div class="flex-1 flex flex-col gap-1">
                         <InputLabel value="Duración" />
                         <div class="flex gap-1">
-                            <TextInput v-model="event.duration" type="number" step="5" min="0" class="w-5/6"/>
+                            <TextInput v-model="programation.duration" type="number" step="5" min="0" class="w-5/6"/>
                             <span class="self-center">s.</span>
                         </div>
-                        <InputError :message="event.errors.duration" />
+                        <InputError :message="programation.errors.duration" />
                     </div>
                     <div class="w-20 flex-col gap-1">
                         <InputLabel value="Proyectar"/>
                         <div class="flex gap-4 pt-3">
-                            <Checkbox v-model:checked="event.visible" class="self-center" />
-                            <span class="self-center">{{ event.visible ? 'Sí' : 'No' }}</span>
+                            <Checkbox v-model:checked="programation.visible" class="self-center" />
+                            <span class="self-center">{{ programation.visible ? 'Sí' : 'No' }}</span>
                         </div>
                     </div>
                 </div>
             </div>
             <template #actions>
-                <PrimaryButton :disabled="!event.isDirty" class="disabled:bg-gray-300" @click="saveevent">
+                <PrimaryButton :disabled="!programation.isDirty" class="disabled:bg-gray-300" @click="saveProgramation">
                     Guardar
                 </PrimaryButton>
                 <SecondaryButton @click="closeeventModal">

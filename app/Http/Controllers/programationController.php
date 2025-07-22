@@ -32,4 +32,11 @@ class programationController extends Controller
             'previousDay' => date_format($previousDay,"Y-m-d"),
         ]);
     }
+
+    function update(Request $request, string $id) {
+        $prog = Programation::find($id);
+        $prog->update($request->input('duration','visible'));
+        
+        return redirect()->back();
+    }
 }

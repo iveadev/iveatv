@@ -32,7 +32,6 @@ const seconds = ref(props.banner.duration)
 
 const showNext = () => {
     const duration = seconds.value * 1000
-    console.log('Next in '+seconds.value+'s.')
     // tiempo mostrando + espera de carga
     setTimeout(() => {
         loading.value = true
@@ -77,7 +76,7 @@ const forceNext = () => {
 </script>
 
 <template>
-    <Head :title="banner.title" />
+    <Head :title="banner.file.name" />
     <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
         <Transition name="fade">
         <div v-if="!loading">
@@ -105,12 +104,12 @@ const forceNext = () => {
                         </div>
                     </div>
                 </div>
-                <div class="text-white fixed bottom-10 left-10">
+                <div class="text-white fixed bottom-10 left-10 right-32">
                     <div v-if="props.empty & loading">
-                        <p class="text-2xl py-2">Instituto Veracruzano de Educación para los Adultos</p>
-                        <div class="flex gap-4 text-md text-white/40">
+                        <p class="text-xl">Instituto Veracruzano de Educación para los Adultos</p>
+                        <div class="flex gap-4 text-sm text-white/40">
                             <a href="https://github.com/cesariux23" target="_blank" class="flex gap-2">
-                                <FontAwesomeIcon icon="fa fa-code" class="self-center text-lg font-bold" />
+                                <FontAwesomeIcon icon="fa fa-code" class="self-center text-md font-bold" />
                                 <span>Developed by :</span>
                                 <span class="font-bold">Departamento de Tecnologías de la Información</span>
                             </a>
@@ -121,7 +120,7 @@ const forceNext = () => {
                 </div>
                 <div class="fixed bottom-10 right-10 text-white grid justify-items-center" v-if="loading">
                     <Transition name="pulse">
-                        <img src="/logo-white.png" :class="{'pulsing-element':props.empty}">
+                        <img src="/logo-white.png" class="max-h-40 lg:max-h-full" :class="{'pulsing-element':props.empty}">
                     </Transition>
                 </div>
                 <div class="fixed top-5 right-5 group w-56 grid grid-cols-2 justify-items-end">
