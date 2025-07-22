@@ -76,6 +76,6 @@ class BannerController extends Controller
         $prog = Programation::find($id);
         $path = public_path($prog->event->file->url);
         $stream = new VideoStream($path);
-        $stream->start();
+        return $stream->start();
     }
 }

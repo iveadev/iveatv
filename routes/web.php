@@ -14,6 +14,7 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/show', [BannerController::class, 'display'])->name('banner.display');
 Route::get('/old', [BannerController::class, 'old'])->name('banner.old');
+ Route::get('/streaming/{id}', [BannerController::class, 'getStreaming'])->name('streaming');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,7 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('/files', FileController::class)->names('file');
     Route::get('/dashboard', [programationController::class, 'index'])->name('dashboard');
     Route::resource('/programation', FileController::class)->names('programation');
-    Route::get('/streaming/{id}', [BannerController::class, 'getStreaming'])->name('streaming');
     
 });
 
