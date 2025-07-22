@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Programation;
 use App\Models\Event;
 use Inertia\Inertia;
+use App\Models\VideoStream;
 
 class BannerController extends Controller
 {
@@ -69,5 +70,12 @@ class BannerController extends Controller
             $next->where('id','>',$id);
         }
         return $next->first();
+    }
+
+    function getStreaming($id){
+        $prog = Programation::find($id);
+        $path = public_path($prog->event->file->url);
+        $stream = new VideoStream($path);
+        $stream->start();
     }
 }

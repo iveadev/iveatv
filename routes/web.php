@@ -27,7 +27,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('/files', FileController::class)->names('file');
     Route::get('/dashboard', [programationController::class, 'index'])->name('dashboard');
     Route::resource('/programation', FileController::class)->names('programation');
+    Route::get('/streaming/{id}', [BannerController::class, 'getStreaming'])->name('streaming');
     
 });
+
+// Route::get('/streaming', function () {
+//     $path = public_path('storage/ENTREVISTATUXPANAndresFHD.mp4');
+//     $stream = new VideoStream($path);
+//     $stream->start();
+// });
+
 
 require __DIR__.'/auth.php';
