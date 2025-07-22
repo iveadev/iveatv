@@ -22,11 +22,14 @@
             margin-right: auto;
             max-height: 99vh;
         }
-        .vid {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            object-fit: fill;
+        video {
+        width:100%;
+        height:auto;
+        max-height:100%
+        }
+
+        .video-content {
+        height:100vh;
         }
      </style>
 </head>
@@ -37,7 +40,9 @@
         @endif
 
         @if ($banner['file']['type'] == 'VIDEO')
-            <video autoplay src="{{$banner['file']['url']}}" class="vid" />
+            <div class="video-content">
+                <video autoplay src="{{route('streaming',$banner['file']['id'])}}" />
+            </div>
         @endif
     </div>
 </body>
