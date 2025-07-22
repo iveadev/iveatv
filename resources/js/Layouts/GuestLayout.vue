@@ -14,9 +14,9 @@ import { Link } from '@inertiajs/vue3';
         class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
     >
 
-        <div class="p-3">
+        <div class="mt-20 lg:mt-0 p-3">
             <Link href="/">
-                <ApplicationLogo class=" fill-current text-gray-500" />
+                <ApplicationLogo class=" fill-current text-gray-500 max-h-20 lg:max-h-full" />
             </Link>
         </div>
         <div class="font-bold text-3xl">

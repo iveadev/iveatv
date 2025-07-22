@@ -3,12 +3,14 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { dateFormat } from '@/utils';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import EventForm from './Profile/Partials/EventForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import TextInput from '@/Components/TextInput.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import { dateFormat } from '@/utils';
 
 const props = defineProps({
     banners:{
@@ -29,11 +31,9 @@ const props = defineProps({
 const eventModalIsShowing = ref(false)
 const emptyevent = {
     id: null,
-    file_id:'',
+    event_id:'',
     duration:'10',
-    visible: false,
-    visibleFrom: props.today+'T00:00',
-    visibleTo: props.today+'T23:59',
+    visible: false
 }
 
 const event = useForm(emptyevent)
@@ -116,14 +116,13 @@ const pickDate = () => {
                 </div>
 
                 <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
+                    class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
                 >
                     <table class="w-full text-center">
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
                                 <th>Orden</th>
-                                <th>Título</th>
-                                <th>Tipo de contenido</th>
+                                <th>Archivo</th>
                                 <th title="Duración (en segundos)">
                                     <FontAwesomeIcon icon="fa-clock" />
                                 </th>
@@ -136,8 +135,14 @@ const pickDate = () => {
                         <tbody>
                             <tr v-for="(banner, index) in banners" class="h-10 border">
                                 <td>{{ index +1 }}</td>
-                                <td class="font-bold">{{ banner.event.file.name }}</td>
-                                <td>{{ banner.event.file.type }}</td>
+                                <td class="font-bold">
+                                    <div class="flex gap-3">
+                                        <FontAwesomeIcon :icon="'fa fa-'+ banner.event.file.type == 'VIDEO' ? 'video':'image'" class="self-center text-gray-500" />
+                                        {{ banner.event.file.type }}
+                                    </div>
+                                    {{ banner.event.file.name }}
+                                    
+                                </td>
                                 <td>{{ banner.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
                                 <td>
@@ -166,12 +171,32 @@ const pickDate = () => {
             </div>
         </div>
 
-        <Modal :show="eventModalIsShowing" closeable @close="closeeventModal" max-width="4xl">
+        <Modal :show="eventModalIsShowing" closeable @close="closeeventModal" max-width="md">
             <template #header>
-                event
+                {{ dateFormat(today) }}
             </template>
+            <div class="text-center py-3 bg-blue-200 border-blue-200">
+                <p class="font-bold">Archivo:</p>
+                <p>{{ event.event.file.name }}</p>
+            </div>
             <div class="p-5">
-                <EventForm v-model="event"></EventForm>
+                <div class="flex gap-4">
+                    <div class="flex-1 flex flex-col gap-1">
+                        <InputLabel value="Duración" />
+                        <div class="flex gap-1">
+                            <TextInput v-model="event.duration" type="number" step="5" min="0" class="w-5/6"/>
+                            <span class="self-center">s.</span>
+                        </div>
+                        <InputError :message="event.errors.duration" />
+                    </div>
+                    <div class="w-20 flex-col gap-1">
+                        <InputLabel value="Proyectar"/>
+                        <div class="flex gap-4 pt-3">
+                            <Checkbox v-model:checked="event.visible" class="self-center" />
+                            <span class="self-center">{{ event.visible ? 'Sí' : 'No' }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <template #actions>
                 <PrimaryButton :disabled="!event.isDirty" class="disabled:bg-gray-300" @click="saveevent">

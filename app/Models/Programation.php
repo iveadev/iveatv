@@ -23,4 +23,12 @@ class Programation extends Model
     function event() : BelongsTo {
         return $this->belongsTo(Event::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'visible' => 'boolean',
+            'duration' => 'string',
+        ];
+    }
 }

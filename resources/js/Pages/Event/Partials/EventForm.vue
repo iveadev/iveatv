@@ -30,12 +30,15 @@ onMounted(()=> {
                 <InputError :message="event.errors.file_id" />
             </div>
             <div class=" w-32 flex flex-col gap-1">
-                <InputLabel value="Segundos" />
-                <TextInput v-model="event.duration" type="number" step="5" min="0"/>
+                <InputLabel value="Duración" />
+                <div class="flex gap-1">
+                    <TextInput v-model="event.duration" type="number" step="5" min="0" class="w-5/6"/>
+                    <span class="self-center">s.</span>
+                </div>
                 <InputError :message="event.errors.duration" />
             </div>
             <div class="w-20 flex-col gap-1">
-                <InputLabel value="Proyectando"/>
+                <InputLabel value="Proyectar"/>
                 <div class="flex gap-4 pt-3">
                     <Checkbox v-model:checked="event.visible" class="self-center" />
                     <span class="self-center">{{ event.visible ? 'Sí' : 'No' }}</span>

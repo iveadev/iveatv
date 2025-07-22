@@ -130,7 +130,7 @@ const deleteFile = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(event, index) in events" class="h-10 border">
+                            <tr v-for="(event) in events" class="h-10 border">
                                 <td>{{ event.id }}</td>
                                 <td>
                                     <p class="font-bold py-2">{{ event.file.name }}</p>

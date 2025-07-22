@@ -85,7 +85,7 @@ const forceNext = () => {
                 <img :src="banner.file.url" class="max-h-screen" @error="handleError" @load="showNext">
             </div>
             <div v-if="banner.file.type == 'VIDEO'" class="bg-black">
-                <video id="videoplayer" autoplay controls @ended="goToNext" class="max-h-screen">
+                <video id="videoplayer" autoplay muted controls @ended="goToNext" class="max-h-screen">
                     <source :src="banner.file.url" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
                 </video> 
@@ -107,10 +107,10 @@ const forceNext = () => {
                 </div>
                 <div class="text-white fixed bottom-10 left-10">
                     <div v-if="props.empty & loading">
-                        <p class="text-5xl py-2">Instituto Veracruzano de Educación para los Adultos</p>
+                        <p class="text-2xl py-2">Instituto Veracruzano de Educación para los Adultos</p>
                         <div class="flex gap-4 text-md text-white/40">
                             <a href="https://github.com/cesariux23" target="_blank" class="flex gap-2">
-                                <FontAwesomeIcon icon="fa fa-code" class="self-center text-2xl font-bold" />
+                                <FontAwesomeIcon icon="fa fa-code" class="self-center text-lg font-bold" />
                                 <span>Developed by :</span>
                                 <span class="font-bold">Departamento de Tecnologías de la Información</span>
                             </a>
