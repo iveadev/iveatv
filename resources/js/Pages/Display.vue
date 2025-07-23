@@ -49,6 +49,7 @@ const showNext = () => {
 }
 
 onMounted(()=>{
+    console.log(props.next)
     if(props.empty) {
         setTimeout(() => {
             loading.value = false        
@@ -94,13 +95,15 @@ const forceNext = () => {
         <Transition name="fade">
             <div class="text-white">
                 <div v-if="haveError" class="bg-gray-600 p-6 text-center rounded-2xl">
-                    <h1 class="text-3xl font-bold py-5">¡Upss!</h1>
+                    <h1 class="text-2xl font-bold py-5">¡Upss!</h1>
                     <p class="text-xl">Parece que tuvimos problemas al cargar el siguiente contenido:</p>
                     <div class="p-4 flex gap-2">
-                        <h2 class="w-1/4 text-3xl font-bold p-3">{{ banner.id }}</h2>
+                        <h2 class="w-1/3 text-2xl font-bold p-3">
+                            {{ banner.file.id }}
+                        </h2>
                         <div class="flex-1 border-l px-5 text-center">
-                            <p class="text-xl">Título: <b>{{ banner.file.name }}</b></p>
-                            <p class="text-xl">Url: <b>{{ banner.file.url }}</b></p>
+                            <p class="text-xl text-amber-500"><FontAwesomeIcon :icon="'fa fa-'+(banner.file.type == 'VIDEO' ? 'camera' : 'image')" class="self-center text-2xl" /> <b>{{ banner.file.name }}</b></p>
+                            <p class="text-lg">Url: <b>{{ banner.file.url }}</b></p>
                         </div>
                     </div>
                 </div>

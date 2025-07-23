@@ -127,7 +127,13 @@ const saveFile = () => {
                                 <td>{{ f.id }}</td>
                                 <td>{{ f.name }}</td>
                                 <td>{{ f.filename }}</td>
-                                <td>{{ f.type }}</td>
+                                <td>
+                                    <div class="flex gap-3">
+                                        <FontAwesomeIcon :icon="'fa fa-'+ (f.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
+                                        {{ f.type }}
+                                    </div>
+                                    
+                                </td>
                                 <td>{{ f.avalible ? 'Sí' : 'No' }}</td>
                                 <td>{{ dateFormat(f.updated_at) }}</td>
                                 <td>

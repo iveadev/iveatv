@@ -23,7 +23,7 @@ class programationController extends Controller
         date_add($nextDay, date_interval_create_from_date_string('1 day'));
         date_sub($previousDay, date_interval_create_from_date_string('1 day'));
         
-        $programation = Programation::where('date', $today)->get();
+        $programation = Programation::where('date', $today)->orderBy('order')->get();
 
         return Inertia::render('Dashboard',[
             'banners' => $programation,
@@ -46,6 +46,15 @@ class programationController extends Controller
     function destroy(Request $request, string $id) {
         $prog = Programation::find($id);
         $prog->delete();
+        return redirect()->back();
+    }
+
+    function reorder(Request $request) {
+        //cambia el orden en el que se presenta los items diarios
+        foreach ($request->input('newOrder') as $key => $value) {
+            Programation::where('id',$value)->update(['order' => $key+1]);
+        } ;
+
         return redirect()->back();
     }
 

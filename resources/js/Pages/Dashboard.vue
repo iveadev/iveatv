@@ -30,6 +30,9 @@ const props = defineProps({
 
 const programationModalIsShowing = ref(false)
 const ModalDeleteIsShowing = ref(false)
+const enableDrag =ref(-1)
+const to = ref(null)
+
 const emptyProgramation = {
     id: null,
     event_id:'',
@@ -92,6 +95,35 @@ const pickDate = () => {
     goToDay(pickedDate.value)
 }
 
+// drag&drop section
+
+
+const moveItem = (arr, from, to) => {
+    arr.splice(to, 0, arr.splice(from, 1)[0]);
+}
+
+const getTo = (evt) => {
+    let tr= evt.target.closest('tr')
+    to.value = tr.dataset.index
+}
+
+const reOrder = (evt) => {
+    let tr = evt.target.closest('tr')
+    let from = tr.dataset.index
+    if( to.value !=null && to.value!=from){
+        moveItem(props.banners, from, to.value)
+        // hace permanentes los cambios
+        const newOrder = []
+        props.banners.forEach((b,idx)=>{
+            newOrder.push(b.id)
+        })
+        router.put(route('programation.reorder'), {newOrder})
+    }
+
+    to.value = null
+    enableDrag.value = false
+}
+
 </script>
 
 <template>
@@ -141,7 +173,8 @@ const pickDate = () => {
                     <table class="w-full text-center">
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
-                                <th>Orden</th>
+                                <th>ID</th>
+                                <th title="Orden de presentación">Orden</th>
                                 <th>Archivo</th>
                                 <th title="Duración (en segundos)">
                                     <FontAwesomeIcon icon="fa-clock" />
@@ -153,9 +186,19 @@ const pickDate = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(banner, index) in banners" class="h-10 border">
-                                <td>{{ index +1 }}</td>
-                                <td class="font-bold">
+                            <tr 
+                                v-for="(banner, index) in banners"
+                                class="h-10 border [&.is-dragging]:cursor-grabbing"
+                                :key="index"
+                                :class="{'border-2 border-teal-500': index == to}"
+                                :draggable="enableDrag == index"
+                                @dragend.stop="reOrder"
+                                @dragleave.stop="getTo"
+                                :data-index="index"
+                            >
+                                <td>{{ banner.id }}</td>
+                                <td class="font-bold text-red-800">{{ index +1 }}</td>
+                                <td>
                                     <div class="flex gap-4" :title="banner.event.file.type">
                                         <FontAwesomeIcon :icon="'fa fa-'+ (banner.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
                                         {{ banner.event.file.name }}
@@ -164,7 +207,7 @@ const pickDate = () => {
                                 <td>{{ banner.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
                                 <td>
-                                    <div class="flex gap-2 justify-center">
+                                    <div class="flex gap-2 justify-center group">
                                         <SecondaryButton @click="openProgramationModal($event, banner)">
                                             <FontAwesomeIcon icon="fa-pencil" class="text-lg" />
                                         </SecondaryButton>
@@ -173,6 +216,11 @@ const pickDate = () => {
                                                 <FontAwesomeIcon icon="fa-trash" class="text-lg" />
                                             </span>
                                         </SecondaryButton>
+                                        <div class="flex-1 text-right" @mouseenter="enableDrag = index" @mouseleave="enableDrag = -1">
+                                            <span title="Mover" class="px-2 opacity-0 group-hover:opacity-100 text-teal-500">
+                                                <FontAwesomeIcon icon="fa fa-hand"></FontAwesomeIcon>   
+                                            </span>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

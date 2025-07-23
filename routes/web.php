@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/event', EventController::class)->names('event');
     Route::resource('/files', FileController::class)->names('file');
     Route::get('/dashboard', [programationController::class, 'index'])->name('dashboard');
+    Route::put('/programation/reorder', [ProgramationController::class, 'reorder'])->name('programation.reorder');
     Route::resource('/programation', ProgramationController::class)->names('programation');
     
 });

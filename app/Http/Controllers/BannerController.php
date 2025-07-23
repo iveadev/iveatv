@@ -11,6 +11,7 @@ use App\Models\VideoStream;
 
 class BannerController extends Controller
 {
+    protected $defaultOrder = 999;
     //
     function display(Request $request){
         $props = $this->getProps($request);
@@ -25,11 +26,13 @@ class BannerController extends Controller
     function getProps ($request) {
         $id = $request->get('id') ?? null;
         $date = $request->get('date') ?? date('Y-m-d');
+        $order = null;
         $props = [];
         $toShow = null;
 
         if(isset($id)){
             $toShow = Programation::find($id);
+            $order = $toShow->order;
         }
         if(!isset($toShow)) {
             $toShow = [
@@ -46,14 +49,16 @@ class BannerController extends Controller
 
         $props['banner'] = $toShow['event'];
         $props['banner']['duration']= $toShow['duration'];
-        $have_visibles = Programation::where('date', $date)->where('visible',1)->count();
+        $have_visibles = Programation::where('date', $date)
+                ->where('visible',1)
+                ->count();
         if($have_visibles == 0){
             $props['banner']['duration']= 30;
             $props['empty'] = true;
         }
         
 
-        $next = $this->getNext($id, $date);
+        $next = $this->getNext($id, $date, $order);
         if(isset($next)){
             $props['next'] = $next->id;
         }
@@ -61,15 +66,18 @@ class BannerController extends Controller
         return $props;
     }
 
-    function getNext($id = null, $date){
+    function getNext($id = null, $date, $order){
         $today =date('y-m-d');
-        $next = Programation::where('date', $date)->where('visible',1);
-        if($today == $date) {
-            //agrega la vigencia por hora
-        }
-        if(isset($id)) {
+        $next = Programation::where('date', $date)
+            ->where('visible',1)
+            ->orderBy('order');
+
+        if(isset($order)){
+            $next->where('order','>',$order);
+        } elseif (isset($id)) {
             $next->where('id','>',$id);
         }
+
         return $next->first();
     }
 

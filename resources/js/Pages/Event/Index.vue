@@ -125,29 +125,26 @@ const deleteFile = () => {
                                 <th title="En proyección">
                                     <FontAwesomeIcon icon="fa fa-display" class="self-center"/>
                                 </th>
-                                <th class="w-48">Vigencia</th>
+                                <th>Desde</th>
+                                <th>Hasta</th>
                                 <th class="w-48">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(event) in events" class="h-10 border">
-                                <td>{{ event.id }}</td>
-                                <td>
-                                    <p class="font-bold py-2">{{ event.file.name }}</p>
-                                    <p>{{ event.file.type }}</p>
+                                <td class="font-bold">{{ event.id }}</td>
+                                <td :title="event.file.type">
+                                    <div class="py-2 flex gap-3">
+                                        <FontAwesomeIcon :icon="'fa fa-'+ (event.file.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
+                                        <span>
+                                            {{ event.file.name }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>{{ event.duration }} s.</td>
                                 <td>{{ event.visible ? 'Sí' : 'No' }}</td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <span class="font-bold w-20">Desde:</span>
-                                        <span>{{ dateFormat(event.visibleFrom) }}</span>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <span class="font-bold w-20">hasta:</span>
-                                        <span>{{ dateFormat(event.visibleTo) }}</span>
-                                    </div>
-                                </td>
+                                <td>{{ dateFormat(event.visibleFrom) }}</td>
+                                <td>{{ dateFormat(event.visibleTo) }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center">
                                         <SecondaryButton @click="openeventModal($event, event)" title="Editar evento">
@@ -162,7 +159,7 @@ const deleteFile = () => {
                                 </td>
                             </tr>
                             <tr v-if="events.length == 0">
-                                <td colspan="8">
+                                <td colspan="7">
                                     <div class="py-6 text-xl text-gray-500">
                                         Sin eventos programados
                                     </div>
