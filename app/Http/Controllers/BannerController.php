@@ -11,7 +11,6 @@ use App\Models\VideoStream;
 
 class BannerController extends Controller
 {
-    protected $defaultOrder = 999;
     //
     function display(Request $request){
         $props = $this->getProps($request);
@@ -26,7 +25,7 @@ class BannerController extends Controller
     function getProps ($request) {
         $id = $request->get('id') ?? null;
         $date = $request->get('date') ?? date('Y-m-d');
-        $order = null;
+        $order = 0;
         $props = [];
         $toShow = null;
 
@@ -70,12 +69,19 @@ class BannerController extends Controller
         $today =date('y-m-d');
         $next = Programation::where('date', $date)
             ->where('visible',1)
-            ->orderBy('order');
-
-        if(isset($order)){
+            ->orderBy('order')
+            ->orderBy('id');
+        
+        // se toma el siguiente orden
+        if ($order == 0) {
+            $next->where('order','>=',$order);
+            // si no hay orden se toma el siguente id
+            if(isset($id)){
+                $next->where('id','>',$id);
+            }
+        } else {
             $next->where('order','>',$order);
-        } elseif (isset($id)) {
-            $next->where('id','>',$id);
+
         }
 
         return $next->first();

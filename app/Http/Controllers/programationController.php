@@ -23,7 +23,10 @@ class programationController extends Controller
         date_add($nextDay, date_interval_create_from_date_string('1 day'));
         date_sub($previousDay, date_interval_create_from_date_string('1 day'));
         
-        $programation = Programation::where('date', $today)->orderBy('order')->get();
+        $programation = Programation::where('date', $today)
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get();
 
         return Inertia::render('Dashboard',[
             'banners' => $programation,
