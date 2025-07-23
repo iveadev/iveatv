@@ -35,8 +35,19 @@ class programationController extends Controller
 
     function update(Request $request, string $id) {
         $prog = Programation::find($id);
-        $prog->update($request->input('duration','visible'));
+        $prog->update([
+            'duration' => $request->input('duration'),
+            'visible' => $request->input('visible')
+        ]);
         
         return redirect()->back();
     }
+
+    function destroy(Request $request, string $id) {
+        $prog = Programation::find($id);
+        $prog->delete();
+        return redirect()->back();
+    }
+
+
 }

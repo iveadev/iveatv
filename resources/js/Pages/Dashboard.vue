@@ -29,6 +29,7 @@ const props = defineProps({
 })
 
 const programationModalIsShowing = ref(false)
+const ModalDeleteIsShowing = ref(false)
 const emptyProgramation = {
     id: null,
     event_id:'',
@@ -38,25 +39,45 @@ const emptyProgramation = {
 
 const programation = useForm(emptyProgramation)
 
-const openProgramationModal = (evt, _event)=>{
+const openProgramationModal = (evt, _prog)=>{
     programation.defaults({...emptyProgramation})
-    if(_event){
-        programation.defaults({..._event})
+    if(_prog){
+        programation.defaults({..._prog})
     }
     programation.reset()
     programationModalIsShowing.value = true
 }
 
-const closeeventModal = () => {
+const closeProgramationModal = () => {
     programationModalIsShowing.value = false
     programation.defaults({...emptyProgramation})
     programation.reset()
 }
 
-const saveProgramation = () => {
-    programation.post(route('programation.store'),{
+const openDeleteModal = (_prog) => {
+    programation.defaults({..._prog})
+    ModalDeleteIsShowing.value = true
+    programation.reset()
+}
+
+const deleteProg = () => {
+    programation.delete(route('programation.destroy', programation.id),{
         onSuccess:() => {
-            closeeventModal()
+            closeDeleteModal()
+        }
+    })
+}
+
+const closeDeleteModal = () =>{
+    programation.defaults({...emptyProgramation})
+    programation.reset()
+    ModalDeleteIsShowing.value = false
+}
+
+const saveProgramation = () => {
+    programation.put(route('programation.update', programation.id),{
+        onSuccess:() => {
+            closeProgramationModal()
         }
     })
 }
@@ -135,12 +156,10 @@ const pickDate = () => {
                             <tr v-for="(banner, index) in banners" class="h-10 border">
                                 <td>{{ index +1 }}</td>
                                 <td class="font-bold">
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-4" :title="banner.event.file.type">
                                         <FontAwesomeIcon :icon="'fa fa-'+ (banner.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
-                                        {{ banner.event.file.type }}
+                                        {{ banner.event.file.name }}
                                     </div>
-                                    {{ banner.event.file.name }}
-                                    
                                 </td>
                                 <td>{{ banner.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
@@ -150,7 +169,7 @@ const pickDate = () => {
                                             <FontAwesomeIcon icon="fa-pencil" class="text-lg" />
                                         </SecondaryButton>
                                         <SecondaryButton>
-                                            <span class="text-red-500">
+                                            <span class="text-red-500" @click="openDeleteModal(banner)">
                                                 <FontAwesomeIcon icon="fa-trash" class="text-lg" />
                                             </span>
                                         </SecondaryButton>
@@ -170,7 +189,7 @@ const pickDate = () => {
             </div>
         </div>
 
-        <Modal :show="programationModalIsShowing" closeable @close="closeeventModal" max-width="md">
+        <Modal :show="programationModalIsShowing" closeable @close="closeProgramationModal" max-width="md">
             <template #header>
                 {{ dateFormat(today) }}
             </template>
@@ -202,11 +221,28 @@ const pickDate = () => {
                 <PrimaryButton :disabled="!programation.isDirty" class="disabled:bg-gray-300" @click="saveProgramation">
                     Guardar
                 </PrimaryButton>
-                <SecondaryButton @click="closeeventModal">
+                <SecondaryButton @click="closeProgramationModal">
                     Cancelar
                 </SecondaryButton>
             </template>
+        </Modal>
 
+        <Modal :show="ModalDeleteIsShowing" closeable type="danger" @close="closeDeleteModal">
+            <template #header>
+                Borrando programación
+            </template>
+            <div class="text-center py-6">
+                <p class="font-bold">¿Deseas continuar?</p>
+                <p>Este proceso no es reversible.</p>
+            </div>
+            <template #actions>
+                <PrimaryButton @click="deleteProg">
+                    Eliminar
+                </PrimaryButton>
+                <SecondaryButton @click="closeDeleteModal">
+                    Cancelar
+                </SecondaryButton>
+            </template>
         </Modal>
     </AuthenticatedLayout>
 </template>

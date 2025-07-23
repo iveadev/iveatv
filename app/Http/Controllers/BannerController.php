@@ -34,9 +34,9 @@ class BannerController extends Controller
         if(!isset($toShow)) {
             $toShow = [
                 'duration' => 5,
-                'event' => [
-                    'title' => 'Inicio',
+                'event' => [ 
                     'file' => [
+                        'name' => 'Inicio',
                         'type' => 'IMAGEN',
                         'url' => '/banner.png',
                     ]
