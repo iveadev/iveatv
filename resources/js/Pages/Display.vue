@@ -77,16 +77,16 @@ const forceNext = () => {
 </script>
 
 <template>
-    <Head :title="banner.file.name" />
+    <Head :title="banner.event.file.name" />
     <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
         <Transition name="fade">
         <div v-if="!loading">
-            <div v-if="banner.file.type == 'IMAGEN'">
-                <img :src="banner.file.url" class="max-h-screen" @error="handleError" @load="showNext">
+            <div v-if="banner.event.file.type == 'IMAGEN'">
+                <img :src="banner.event.file.url" class="max-h-screen" @error="handleError" @load="showNext">
             </div>
-            <div v-if="banner.file.type == 'VIDEO'" class="bg-black">
-                <video id="videoplayer" autoplay muted controls @ended="goToNext" class="max-h-screen">
-                    <source :src="route('streaming',banner.file.id)" type="video/mp4" @error="handleError"> 
+            <div v-if="banner.event.file.type == 'VIDEO'" class="bg-black">
+                <video id="videoplayer" autoplay :muted="banner.muted" controls @ended="goToNext" class="max-h-screen">
+                    <source :src="route('streaming',banner.event.file.id)" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
                 </video> 
             </div>
@@ -99,11 +99,11 @@ const forceNext = () => {
                     <p class="text-xl">Parece que tuvimos problemas al cargar el siguiente contenido:</p>
                     <div class="p-4 flex gap-2">
                         <h2 class="w-1/3 text-2xl font-bold p-3">
-                            {{ banner.file.id }}
+                            {{ banner.event.file.id }}
                         </h2>
                         <div class="flex-1 border-l px-5 text-center">
-                            <p class="text-xl text-amber-500"><FontAwesomeIcon :icon="'fa fa-'+(banner.file.type == 'VIDEO' ? 'camera' : 'image')" class="self-center text-2xl" /> <b>{{ banner.file.name }}</b></p>
-                            <p class="text-lg">Url: <b>{{ banner.file.url }}</b></p>
+                            <p class="text-xl text-amber-500"><FontAwesomeIcon :icon="'fa fa-'+(banner.event.file.type == 'VIDEO' ? 'camera' : 'image')" class="self-center text-2xl" /> <b>{{ banner.event.file.name }}</b></p>
+                            <p class="text-lg">Url: <b>{{ banner.event.file.url }}</b></p>
                         </div>
                     </div>
                 </div>

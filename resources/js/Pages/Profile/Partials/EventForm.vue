@@ -27,6 +27,10 @@ onMounted(()=> {
                     <option v-for="f in files" :value="f.id"><span class="font-bold">{{ f.title }}</span> ({{ f.type }} -- {{ f.filename }})</option>
                 </select>
             </div>
+             <div class="w-20 grid gap-1">
+                <InputLabel value="Mutear"/>
+                <Checkbox v-model:checked="event.muted"></Checkbox>
+            </div>
             <div class="grid gap-1">
                 <InputLabel value="Duración" />
                 <div class="flex gap-3">

@@ -37,7 +37,8 @@ const emptyProgramation = {
     id: null,
     event_id:'',
     duration:'10',
-    visible: false
+    visible: false,
+    muted: true,
 }
 
 const programation = useForm(emptyProgramation)
@@ -182,6 +183,9 @@ const reOrder = (evt) => {
                                 <th title="En proyección">
                                     <FontAwesomeIcon icon="fa-display" />
                                 </th>
+                                <th title="Muteado">
+                                    <FontAwesomeIcon icon="fa fa-volume-xmark" />
+                                </th>
                                 <th class="w-1/5">Acciones</th>
                             </tr>
                         </thead>
@@ -206,6 +210,7 @@ const reOrder = (evt) => {
                                 </td>
                                 <td>{{ banner.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
+                                 <td>{{ banner.muted ? 'Sí' : 'No' }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center group">
                                         <SecondaryButton @click="openProgramationModal($event, banner)">
@@ -261,6 +266,13 @@ const reOrder = (evt) => {
                         <div class="flex gap-4 pt-3">
                             <Checkbox v-model:checked="programation.visible" class="self-center" />
                             <span class="self-center">{{ programation.visible ? 'Sí' : 'No' }}</span>
+                        </div>
+                    </div>
+                    <div class="w-20 flex-col gap-1">
+                        <InputLabel value="Mutear"/>
+                        <div class="flex gap-4 pt-3">
+                            <Checkbox v-model:checked="programation.muted" class="self-center" />
+                            <span class="self-center">{{ programation.muted ? 'Sí' : 'No' }}</span>
                         </div>
                     </div>
                 </div>

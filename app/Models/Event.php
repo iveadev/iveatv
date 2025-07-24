@@ -17,6 +17,7 @@ class Event extends Model
         'visibleFrom',
         'visibleTo',
         'visible',
+        'muted',
     ];
 
     protected $with= [
@@ -52,6 +53,7 @@ class Event extends Model
     {
         return [
             'visible' => 'boolean',
+            'muted' => 'boolean',
             'duration' => 'string',
         ];
     }

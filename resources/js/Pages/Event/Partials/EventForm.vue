@@ -38,14 +38,22 @@ onMounted(()=> {
                 <InputError :message="event.errors.duration" />
             </div>
             <div class="w-20 flex-col gap-1">
+                <InputLabel value="Mutear"/>
+                <div class="flex gap-4 pt-3">
+                    <Checkbox v-model:checked="event.muted" class="self-center" />
+                    <span class="self-center">{{ event.muted ? 'Sí' : 'No' }}</span>
+                </div>
+            </div>
+            
+        </div>
+        <div class="flex gap-2">
+            <div class="w-20 flex-col gap-1">
                 <InputLabel value="Proyectar"/>
                 <div class="flex gap-4 pt-3">
                     <Checkbox v-model:checked="event.visible" class="self-center" />
                     <span class="self-center">{{ event.visible ? 'Sí' : 'No' }}</span>
                 </div>
             </div>
-        </div>
-        <div class="flex gap-2">
             <div class="flex-1 flex flex-col gap-1">
                 <InputLabel value="Visible desde"/>
                 <TextInput required v-model="event.visibleFrom" type="date"/>

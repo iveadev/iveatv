@@ -36,6 +36,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'visible' => 'boolean',
+            'muted' => 'boolean',
             'duration' => 'integer',
             'visibleFrom' => 'date',
             'visibleTo' => 'date',
@@ -48,6 +49,7 @@ class EventController extends Controller
                 'date' => $date,
                 'event_id' => $event->id,
                 'visible' => $event->visible,
+                'muted' => $event->muted,
                 'duration' => $event->duration,
             ]);
         }
@@ -80,6 +82,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'visible' => 'boolean',
+            'muted' => 'boolean',
             'duration' => 'integer',
             'visibleFrom' => 'date',
             'visibleTo' => 'date',
@@ -104,6 +107,7 @@ class EventController extends Controller
             // Se actualizan los valores de la programación
             $prog->update([
                 'visible' => $event->visible,
+                'muted' => $event->muted,
                 'duration' => $event->duration,
                 
             ]);

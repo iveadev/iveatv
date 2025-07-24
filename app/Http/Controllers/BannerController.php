@@ -31,11 +31,12 @@ class BannerController extends Controller
 
         if(isset($id)){
             $toShow = Programation::find($id);
-            $order = $toShow->order;
+            $order = $toShow->order;            
         }
         if(!isset($toShow)) {
             $toShow = [
                 'duration' => 5,
+                'muted' => true,
                 'event' => [ 
                     'file' => [
                         'name' => 'Inicio',
@@ -46,8 +47,7 @@ class BannerController extends Controller
             ];
         }
 
-        $props['banner'] = $toShow['event'];
-        $props['banner']['duration']= $toShow['duration'];
+        $props['banner'] = $toShow;
         $have_visibles = Programation::where('date', $date)
                 ->where('visible',1)
                 ->count();

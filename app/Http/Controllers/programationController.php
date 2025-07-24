@@ -40,7 +40,8 @@ class programationController extends Controller
         $prog = Programation::find($id);
         $prog->update([
             'duration' => $request->input('duration'),
-            'visible' => $request->input('visible')
+            'visible' => $request->input('visible'),
+            'muted' => $request->input('muted'),
         ]);
         
         return redirect()->back();
