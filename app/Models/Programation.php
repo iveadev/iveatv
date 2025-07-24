@@ -18,7 +18,12 @@ class Programation extends Model
         'order',
     ];
     protected $with = [
-        'event',
+        'event.file',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
     ];
 
     function event() : BelongsTo {

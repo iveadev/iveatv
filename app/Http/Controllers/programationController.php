@@ -37,12 +37,13 @@ class programationController extends Controller
     }
 
     function update(Request $request, string $id) {
-        $prog = Programation::find($id);
-        $prog->update([
-            'duration' => $request->input('duration'),
-            'visible' => $request->input('visible'),
-            'sound' => $request->input('sound'),
+        $validated = $request->validate([
+            'visible' => 'sometimes|boolean',
+            'sound' => 'sometimes|boolean',
+            'duration' => 'sometimes|integer',
         ]);
+        $prog = Programation::find($id);
+        $prog->update($validated);
         
         return redirect()->back();
     }

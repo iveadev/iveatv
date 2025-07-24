@@ -30,7 +30,7 @@ const props = defineProps({
 
 const programationModalIsShowing = ref(false)
 const ModalDeleteIsShowing = ref(false)
-const enableDrag =ref(-1)
+const enableDrag =ref(true)
 const to = ref(null)
 
 const emptyProgramation = {
@@ -125,6 +125,16 @@ const reOrder = (evt) => {
     enableDrag.value = false
 }
 
+const toggleProp = (obj,prop) =>{
+    const toSend = {}
+    toSend[prop] = !obj[prop]
+    router.put(route('programation.update',obj.id),toSend,{
+        onSuccess:() => {
+            console.log('ok!')
+        }
+    })
+}
+
 </script>
 
 <template>
@@ -138,6 +148,9 @@ const reOrder = (evt) => {
             >
                 Programación del día
             </h2>
+            <!-- <SecondaryButton @click="enableDrag = !enableDrag">
+                Cambiar orden
+            </SecondaryButton> -->
             </div>
         </template>
 
@@ -154,11 +167,11 @@ const reOrder = (evt) => {
                         </SecondaryButton>
                     </div>
                     <button type="button" class="px-3 rounded" title="Seleccionar otra fecha">
-                        <b class="text-red-800 text-center">
+                        <b class="text-blue-800 text-center">
                             <TextInput v-model="pickedDate" type="date" @change="pickDate"/>
                         </b>
                     </button>
-                    <div class="grid justify-items-end">
+                    <div class="text-right">
                         <SecondaryButton @click="goToDay(nextDay)">
                             <div class="flex gap-2">
                                 Siguiente
@@ -183,8 +196,8 @@ const reOrder = (evt) => {
                                 <th title="En proyección">
                                     <FontAwesomeIcon icon="fa-display" />
                                 </th>
-                                <th title="Muteado">
-                                    <FontAwesomeIcon icon="fa fa-volume-xmark" />
+                                <th title="Reproducir sonido">
+                                    <FontAwesomeIcon icon="fa fa-volume-high" />
                                 </th>
                                 <th class="w-1/5">Acciones</th>
                             </tr>
@@ -194,8 +207,8 @@ const reOrder = (evt) => {
                                 v-for="(banner, index) in banners"
                                 class="h-10 border [&.is-dragging]:cursor-grabbing"
                                 :key="index"
-                                :class="{'border-2 border-teal-500': index == to}"
-                                :draggable="enableDrag == index"
+                                :class="{'border-2 border-purple-500': index == to}"
+                                :draggable="enableDrag"
                                 @dragend.stop="reOrder"
                                 @dragleave.stop="getTo"
                                 :data-index="index"
@@ -208,22 +221,39 @@ const reOrder = (evt) => {
                                         {{ banner.event.file.name }}
                                     </div>
                                 </td>
-                                <td>{{ banner.duration }} s.</td>
-                                <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
-                                 <td>{{ banner.sound ? 'Sí' : 'No' }}</td>
                                 <td>
-                                    <div class="flex gap-2 justify-center group">
+                                    <div v-if="banner.event.file.type =='VIDEO'" class="text-gray-400 text-xs">
+                                        N/A
+                                    </div>
+                                    <div v-else>
+                                        <b>{{ banner.duration }}</b> <span class="text-gray-500">s.</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-200':!banner.visible, 'text-green-600 font-bold':banner.visible}"/>
+                                </td>
+                                <td :class="{'text-gray-400':!banner.sound, 'font-bold':banner.sound}">
+                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-200':!banner.sound, 'text-green-600 font-bold':banner.sound}"/>
+                                </td>
+                                <td>
+                                    <div class="flex gap-1 justify-items-center group">
+                                        <SecondaryButton @click="toggleProp(banner, 'visible')">
+                                            <FontAwesomeIcon :icon="'fa fa-'+(banner.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!banner.visible}"/>
+                                        </SecondaryButton>
+                                        <SecondaryButton @click="toggleProp(banner, 'sound')" :disabled="!banner.visible">
+                                            <FontAwesomeIcon :icon="'fa fa-'+(banner.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!banner.sound, 'text-orange-600':banner.sound}"/>
+                                        </SecondaryButton>
                                         <SecondaryButton @click="openProgramationModal($event, banner)">
-                                            <FontAwesomeIcon icon="fa-pencil" class="text-lg" />
+                                            <FontAwesomeIcon icon="fa-pencil" class="text-lg text-sky-500" />
                                         </SecondaryButton>
                                         <SecondaryButton>
                                             <span class="text-red-500" @click="openDeleteModal(banner)">
                                                 <FontAwesomeIcon icon="fa-trash" class="text-lg" />
                                             </span>
                                         </SecondaryButton>
-                                        <div class="flex-1 text-right" @mouseenter="enableDrag = index" @mouseleave="enableDrag = -1">
-                                            <span title="Mover" class="px-2 opacity-0 group-hover:opacity-100 text-teal-500">
-                                                <FontAwesomeIcon icon="fa fa-hand"></FontAwesomeIcon>   
+                                        <div class="flex-1 text-right" @mouseenter="enableDrag = true" @mouseleave="enableDrag = false">
+                                            <span title="Mover" class="p-2 opacity-0 group-hover:opacity-100 text-purple-500">
+                                                <FontAwesomeIcon icon="fa fa-hand" class="self-center" />
                                             </span>
                                         </div>
                                     </div>
@@ -242,18 +272,18 @@ const reOrder = (evt) => {
             </div>
         </div>
 
-        <Modal :show="programationModalIsShowing" closeable @close="closeProgramationModal" max-width="md">
+        <Modal :show="programationModalIsShowing" closeable @close="closeProgramationModal" max-width="lg" type="notify">
             <template #header>
                 {{ dateFormat(today) }}
             </template>
-            <div class="py-3 bg-amber-200 text-amber-800 flex gap-2">
+            <div class="py-3 bg-gray-300 flex gap-2">
                 <div class="w-20 text-right">Archivo:</div>
                 <FontAwesomeIcon :icon="'fa fa-'+ (programation.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center" />
                 <div class="font-bold">{{ programation.event.file.name }}</div>
             </div>
             <div class="p-5">
                 <div class="flex gap-4">
-                    <div class="flex-1 flex flex-col gap-1">
+                    <div class="flex-1 flex flex-col gap-1" v-if="programation.event.file.type=='IMAGEN'">
                         <InputLabel value="Duración" />
                         <div class="flex gap-1">
                             <TextInput v-model="programation.duration" type="number" step="5" min="0" class="w-5/6"/>

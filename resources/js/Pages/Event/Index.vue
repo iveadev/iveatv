@@ -4,7 +4,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { dateFormat } from '@/utils';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import EventForm from './Partials/EventForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -79,7 +79,7 @@ const closeDeleteModal = () => {
     EventToDelete.value = {}
     ModalDeleteIsShowing.value = false
 }
-const deleteFile = () => {
+const deleteEvent = () => {
     event.reset();
     event.id = EventToDelete.value.id;
     event.delete(route('event.destroy',event.id), {
@@ -88,7 +88,16 @@ const deleteFile = () => {
             closeDeleteModal();
         }
     })
-    
+}
+
+const toggleProp = (obj,prop) =>{
+    const toSend = {}
+    toSend[prop] = !obj[prop]
+    router.put(route('event.update',obj.id),toSend,{
+        onSuccess:() => {
+            console.log('ok!')
+        }
+    })
 }
 
 </script>
@@ -120,14 +129,17 @@ const deleteFile = () => {
                             <tr class="h-10">
                                 <th>ID</th>
                                 <th>Archivo</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
                                 <th title="Duración (en segundos)">
                                     <FontAwesomeIcon icon="fa fa-clock" />
                                 </th>
                                 <th title="En proyección">
                                     <FontAwesomeIcon icon="fa fa-display" class="self-center"/>
                                 </th>
-                                <th>Desde</th>
-                                <th>Hasta</th>
+                                <th title="Reproducir sonido">
+                                    <FontAwesomeIcon icon="fa fa-volume-high" />
+                                </th>
                                 <th class="w-48">Acciones</th>
                             </tr>
                         </thead>
@@ -142,14 +154,32 @@ const deleteFile = () => {
                                         </span>
                                     </div>
                                 </td>
-                                <td>{{ event.duration }} s.</td>
-                                <td>{{ event.visible ? 'Sí' : 'No' }}</td>
                                 <td>{{ dateFormat(event.visibleFrom) }}</td>
                                 <td>{{ dateFormat(event.visibleTo) }}</td>
                                 <td>
+                                    <div v-if="event.file.type =='VIDEO'" class="text-gray-400 text-xs">
+                                        N/A
+                                    </div>
+                                    <div v-else>
+                                        <b>{{ event.duration }}</b> <span class="text-gray-500">s.</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-200':!event.visible, 'text-green-600 font-bold':event.visible}"/>
+                                </td>
+                                <td :class="{'text-gray-400':!event.sound, 'font-bold':event.sound}">
+                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-200':!event.sound, 'text-green-600 font-bold':event.sound}"/>
+                                </td>
+                                <td>
                                     <div class="flex gap-2 justify-center">
+                                        <SecondaryButton @click="toggleProp(event, 'visible')">
+                                            <FontAwesomeIcon :icon="'fa fa-'+(event.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!event.visible}"/>
+                                        </SecondaryButton>
+                                        <SecondaryButton @click="toggleProp(event, 'sound')" :disabled="!event.visible">
+                                            <FontAwesomeIcon :icon="'fa fa-'+(event.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!event.sound, 'text-orange-600':event.sound}"/>
+                                        </SecondaryButton>
                                         <SecondaryButton @click="openeventModal($event, event)" title="Editar evento">
-                                            <FontAwesomeIcon icon="fa fa-pencil" class="text-lg"/>
+                                            <FontAwesomeIcon icon="fa fa-pencil" class="text-lg text-sky-500"/>
                                         </SecondaryButton>
                                         <SecondaryButton title="Eliminar" @click="openDeleteModal(event)">
                                             <span class="text-red-500 text-lg">
@@ -199,7 +229,7 @@ const deleteFile = () => {
                 <p>Se eliminará el evento y la programación asociada.</p>
             </div>
             <template #actions>
-                <PrimaryButton @click="deleteFile">
+                <PrimaryButton @click="deleteEvent">
                     Eliminar
                 </PrimaryButton>
                 <SecondaryButton @click="closeDeleteModal">

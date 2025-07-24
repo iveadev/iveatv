@@ -80,12 +80,12 @@ class EventController extends Controller
     {
         //
         $validated = $request->validate([
-            'file_id' => 'required|exists:files,id',
+            'file_id' => 'sometimes|required|exists:files,id',
             'visible' => 'boolean',
             'sound' => 'boolean',
-            'duration' => 'integer',
-            'visibleFrom' => 'date',
-            'visibleTo' => 'date',
+            'duration' => 'sometimes|integer',
+            'visibleFrom' => 'sometimes|date',
+            'visibleTo' => 'sometimes|date',
         ]);
         
         $event = Event::findOrFail($id);
