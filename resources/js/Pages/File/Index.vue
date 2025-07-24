@@ -8,12 +8,17 @@ import FileForm from './FileForm.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { dateFormat } from '@/utils';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useToasterStore } from '@/stores/notify';
 
 const props = defineProps({
     files:{
         type: Array
     }
 });
+
+// notificaciones
+const notifyStore = useToasterStore();
+
 
 const ModalIsShowing = ref(false);
 const ModalDeleteIsShowing = ref(false);
@@ -57,6 +62,8 @@ const deleteFile = () => {
         onSuccess:()=>{
             file.reset();
             closeDeleteModal();
+            notifyStore.notify('Se eliminó el archivo correctamente.')
+            
         }
     })
     
@@ -71,6 +78,7 @@ const saveFile = () => {
             },
             onSuccess:() =>{
                 closeModal();
+                notifyStore.notify('Se actualizó el archivo correctamente.')
             }
         })
 
@@ -82,6 +90,7 @@ const saveFile = () => {
             },
             onSuccess:() =>{
                 closeModal();
+                notifyStore.notify('Se registró el archivo correctamente.')
             }
         })
     }

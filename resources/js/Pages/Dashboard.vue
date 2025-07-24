@@ -11,6 +11,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import { dateFormat } from '@/utils';
+import { useToasterStore } from '@/stores/notify';
 
 const props = defineProps({
     banners:{
@@ -27,6 +28,9 @@ const props = defineProps({
         type:String,
     }
 })
+
+// notificaciones
+const notifyStore = useToasterStore();
 
 const programationModalIsShowing = ref(false)
 const ModalDeleteIsShowing = ref(false)
@@ -68,6 +72,7 @@ const deleteProg = () => {
     programation.delete(route('programation.destroy', programation.id),{
         onSuccess:() => {
             closeDeleteModal()
+            notifyStore.notify('Se eliminó correctamente.')
         }
     })
 }
@@ -82,6 +87,7 @@ const saveProgramation = () => {
     programation.put(route('programation.update', programation.id),{
         onSuccess:() => {
             closeProgramationModal()
+            notifyStore.notify('Se actualizó correctamente.')
         }
     })
 }
@@ -118,7 +124,11 @@ const reOrder = (evt) => {
         props.banners.forEach((b,idx)=>{
             newOrder.push(b.id)
         })
-        router.put(route('programation.reorder'), {newOrder})
+        router.put(route('programation.reorder'), {newOrder},{
+            onSuccess: () => {
+                notifyStore.notify('Se actualizó el orden de presentación.', 'info')
+            }
+        })
     }
 
     to.value = null
@@ -130,7 +140,7 @@ const toggleProp = (obj,prop) =>{
     toSend[prop] = !obj[prop]
     router.put(route('programation.update',obj.id),toSend,{
         onSuccess:() => {
-            console.log('ok!')
+            notifyStore.notify('Item '+obj.id+' actualizado.', 'info')
         }
     })
 }
@@ -240,7 +250,7 @@ const toggleProp = (obj,prop) =>{
                                         <SecondaryButton @click="toggleProp(banner, 'visible')">
                                             <FontAwesomeIcon :icon="'fa fa-'+(banner.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!banner.visible}"/>
                                         </SecondaryButton>
-                                        <SecondaryButton @click="toggleProp(banner, 'sound')" :disabled="!banner.visible">
+                                        <SecondaryButton @click="toggleProp(banner, 'sound')" :disabled="!banner.visible || banner.event.file.type !='VIDEO'">
                                             <FontAwesomeIcon :icon="'fa fa-'+(banner.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!banner.sound, 'text-orange-600':banner.sound}"/>
                                         </SecondaryButton>
                                         <SecondaryButton @click="openProgramationModal($event, banner)">

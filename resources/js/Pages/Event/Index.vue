@@ -8,6 +8,7 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import EventForm from './Partials/EventForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useToasterStore } from '@/stores/notify';
 
 const props = defineProps({
     events:{
@@ -18,6 +19,9 @@ const props = defineProps({
         type:String,
     }
 })
+
+// notificaciones
+const notifyStore = useToasterStore();
 
 const eventModalIsShowing = ref(false)
 const ModalDeleteIsShowing = ref(false);
@@ -56,6 +60,7 @@ const saveEvent = () => {
         event.put(route('event.update', event.id),{
             onSuccess:() => {
                 closeEventModal()
+                notifyStore.notify('Se actualizó el evento correctamente.')
             }
         })
     } else {
@@ -65,6 +70,7 @@ const saveEvent = () => {
             },
             onSuccess:() => {
                 closeEventModal()
+                notifyStore.notify('Se registró el evento correctamente.')
             }
         })
     }
@@ -86,6 +92,7 @@ const deleteEvent = () => {
         onSuccess:()=>{
             event.reset();
             closeDeleteModal();
+            notifyStore.notify('Se eliminó el evento correctamente.')
         }
     })
 }
@@ -95,7 +102,7 @@ const toggleProp = (obj,prop) =>{
     toSend[prop] = !obj[prop]
     router.put(route('event.update',obj.id),toSend,{
         onSuccess:() => {
-            console.log('ok!')
+            notifyStore.notify('Evento '+obj.id+' actualizado.', 'info')
         }
     })
 }
@@ -175,7 +182,7 @@ const toggleProp = (obj,prop) =>{
                                         <SecondaryButton @click="toggleProp(event, 'visible')">
                                             <FontAwesomeIcon :icon="'fa fa-'+(event.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!event.visible}"/>
                                         </SecondaryButton>
-                                        <SecondaryButton @click="toggleProp(event, 'sound')" :disabled="!event.visible">
+                                        <SecondaryButton @click="toggleProp(event, 'sound')" :disabled="!event.visible || event.file.type !='VIDEO'">
                                             <FontAwesomeIcon :icon="'fa fa-'+(event.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!event.sound, 'text-orange-600':event.sound}"/>
                                         </SecondaryButton>
                                         <SecondaryButton @click="openeventModal($event, event)" title="Editar evento">
