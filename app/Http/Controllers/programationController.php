@@ -41,7 +41,7 @@ class programationController extends Controller
         $prog->update([
             'duration' => $request->input('duration'),
             'visible' => $request->input('visible'),
-            'muted' => $request->input('muted'),
+            'sound' => $request->input('sound'),
         ]);
         
         return redirect()->back();

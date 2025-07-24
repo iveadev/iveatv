@@ -41,7 +41,7 @@
 
         @if ($banner['file']['type'] == 'VIDEO')
             <div class="video-content">
-                <video id="videoplayer" autoplay muted controls  />
+                <video id="videoplayer" autoplay sound controls  />
                 <source src="{{route('streaming',$banner['file']['id'])}}" type="video/mp4">
             </div>
         @endif

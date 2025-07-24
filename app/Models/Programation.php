@@ -14,7 +14,7 @@ class Programation extends Model
         'event_id',
         'duration',
         'visible',
-        'muted',
+        'sound',
         'order',
     ];
     protected $with = [
@@ -29,7 +29,7 @@ class Programation extends Model
     {
         return [
             'visible' => 'boolean',
-            'muted' => 'boolean',
+            'sound' => 'boolean',
             'duration' => 'string',
         ];
     }

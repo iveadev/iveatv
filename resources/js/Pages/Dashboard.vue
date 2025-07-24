@@ -38,7 +38,7 @@ const emptyProgramation = {
     event_id:'',
     duration:'10',
     visible: false,
-    muted: true,
+    sound: false,
 }
 
 const programation = useForm(emptyProgramation)
@@ -210,7 +210,7 @@ const reOrder = (evt) => {
                                 </td>
                                 <td>{{ banner.duration }} s.</td>
                                 <td>{{ banner.visible ? 'Sí' : 'No' }}</td>
-                                 <td>{{ banner.muted ? 'Sí' : 'No' }}</td>
+                                 <td>{{ banner.sound ? 'Sí' : 'No' }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center group">
                                         <SecondaryButton @click="openProgramationModal($event, banner)">
@@ -269,10 +269,10 @@ const reOrder = (evt) => {
                         </div>
                     </div>
                     <div class="w-20 flex-col gap-1">
-                        <InputLabel value="Mutear"/>
+                        <InputLabel value="Sonido"/>
                         <div class="flex gap-4 pt-3">
-                            <Checkbox v-model:checked="programation.muted" class="self-center" />
-                            <span class="self-center">{{ programation.muted ? 'Sí' : 'No' }}</span>
+                            <Checkbox v-model:checked="programation.sound" class="self-center" />
+                            <span class="self-center">{{ programation.sound ? 'Sí' : 'No' }}</span>
                         </div>
                     </div>
                 </div>

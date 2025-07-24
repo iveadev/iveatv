@@ -28,8 +28,8 @@ onMounted(()=> {
                 </select>
             </div>
              <div class="w-20 grid gap-1">
-                <InputLabel value="Mutear"/>
-                <Checkbox v-model:checked="event.muted"></Checkbox>
+                <InputLabel value="Sonido"/>
+                <Checkbox v-model:checked="event.sound"></Checkbox>
             </div>
             <div class="grid gap-1">
                 <InputLabel value="Duración" />

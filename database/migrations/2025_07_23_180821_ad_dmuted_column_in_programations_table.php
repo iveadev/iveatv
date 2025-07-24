@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('programations', function (Blueprint $table) {
             //
-            $table->boolean('muted')->default(1);
+            $table->boolean('sound')->default(0);
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('programations', function (Blueprint $table) {
             //
-            $table->dropColumn('muted');
+            $table->dropColumn('sound');
         });
     }
 };

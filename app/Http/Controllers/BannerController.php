@@ -36,7 +36,7 @@ class BannerController extends Controller
         if(!isset($toShow)) {
             $toShow = [
                 'duration' => 5,
-                'muted' => true,
+                'sound' => true,
                 'event' => [ 
                     'file' => [
                         'name' => 'Inicio',

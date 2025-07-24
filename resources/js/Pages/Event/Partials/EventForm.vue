@@ -38,10 +38,10 @@ onMounted(()=> {
                 <InputError :message="event.errors.duration" />
             </div>
             <div class="w-20 flex-col gap-1">
-                <InputLabel value="Mutear"/>
+                <InputLabel value="Sonido"/>
                 <div class="flex gap-4 pt-3">
-                    <Checkbox v-model:checked="event.muted" class="self-center" />
-                    <span class="self-center">{{ event.muted ? 'Sí' : 'No' }}</span>
+                    <Checkbox v-model:checked="event.sound" class="self-center" />
+                    <span class="self-center">{{ event.sound ? 'Sí' : 'No' }}</span>
                 </div>
             </div>
             
