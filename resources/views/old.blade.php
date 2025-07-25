@@ -35,14 +35,14 @@
 </head>
 <body>
     <div class="container" class="container">
-        @if ($banner['file']['type'] == 'IMAGEN')
-            <img src="{{$banner['file']['url']}}" class="img">
+        @if ($banner['event']['file']['type'] == 'IMAGEN')
+            <img src="{{$banner['event']['file']['url']}}" class="img">
         @endif
 
-        @if ($banner['file']['type'] == 'VIDEO')
+        @if ($banner['event']['file']['type'] == 'VIDEO')
             <div class="video-content">
                 <video id="videoplayer" autoplay sound controls  />
-                <source src="{{route('streaming',$banner['file']['id'])}}" type="video/mp4">
+                <source src="{{route('streaming',$banner['event']['file']['id'])}}" type="video/mp4">
             </div>
         @endif
     </div>
@@ -50,6 +50,7 @@
     <script>
 
         const waitTime = {{$banner['duration']}} *1000;
+        console.log(waitTime)
         setTimeout(() => {
             console.log('change')
             window.location.href = "{{route('banner.old', ['id' => $next ?? ''])}}"
