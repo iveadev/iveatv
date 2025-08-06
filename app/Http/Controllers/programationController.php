@@ -28,6 +28,11 @@ class programationController extends Controller
             ->orderBy('id')
             ->get();
 
+
+        // temporal
+        $this->reorderProg($today);
+
+
         return Inertia::render('Dashboard',[
             'banners' => $programation,
             'today'=> $today,
@@ -61,6 +66,19 @@ class programationController extends Controller
         } ;
 
         return redirect()->back();
+    }
+    
+
+    // solo se usará en temporalmente
+    function reorderProg($date) {
+        $events = Programation::where('date', $date)
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get();
+        
+        foreach ($events as $order => $evt) {
+            $evt->update(['order' => $order+1]);
+        }
     }
 
 

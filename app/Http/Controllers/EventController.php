@@ -52,6 +52,9 @@ class EventController extends Controller
                 'sound' => $event->sound,
                 'duration' => $event->duration,
             ]);
+            // reordenar la programacion de ese dia
+            $this->reorderProg($date);
+
         }
         return redirect()->back();
 
@@ -111,6 +114,8 @@ class EventController extends Controller
                 'duration' => $event->duration,
                 
             ]);
+
+            $this->reorderProg($date);
         }
             
 
@@ -129,5 +134,16 @@ class EventController extends Controller
         $event->destroyRelatedProgramation();
         $event->delete();
         return redirect()->back();
+    }
+
+    function reorderProg($date) {
+        $events = Programation::where('date', $date)
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get();
+        
+        foreach ($events as $order => $evt) {
+            $evt->update(['order' => $order+1]);
+        }
     }
 }

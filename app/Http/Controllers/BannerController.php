@@ -73,16 +73,7 @@ class BannerController extends Controller
             ->orderBy('id');
         
         // se toma el siguiente orden
-        if ($order == 0) {
-            $next->where('order','>=',$order);
-            // si no hay orden se toma el siguente id
-            if(isset($id)){
-                $next->where('id','>',$id);
-            }
-        } else {
-            $next->where('order','>',$order);
-
-        }
+        $next->where('order','>',$order);
 
         return $next->first();
     }
