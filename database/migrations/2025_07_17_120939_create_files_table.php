@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('filename');
-            $table->string('type')->default('IMAGEN');
+            $table->string('type')->default('image');
             $table->string('url');
             $table->boolean('avalible')->default(1);
             $table->timestamps();

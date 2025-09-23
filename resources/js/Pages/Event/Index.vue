@@ -116,7 +116,7 @@ const toggleProp = (obj,prop) =>{
         <template #header>
             <div class="flex">
                 <h2
-                class="flex-1 text-xl font-semibold leading-tight text-gray-800"
+                class="flex-1 text-xl font-semibold leading-tight text-red-900"
             >
                 Adminsitración de eventos
             </h2>
@@ -126,7 +126,7 @@ const toggleProp = (obj,prop) =>{
             </div>
         </template>
 
-        <div class="p-12">
+        <div class=" pt-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div
                     class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
@@ -135,9 +135,8 @@ const toggleProp = (obj,prop) =>{
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
                                 <th>ID</th>
-                                <th>Archivo</th>
-                                <th>Inicio</th>
-                                <th>Fin</th>
+                                <th class="text-left">Archivo a reproducir</th>
+                                <th class="text-left">Duración</th>
                                 <th title="Duración (en segundos)">
                                     <FontAwesomeIcon icon="fa fa-clock" />
                                 </th>
@@ -152,19 +151,32 @@ const toggleProp = (obj,prop) =>{
                         </thead>
                         <tbody>
                             <tr v-for="(event) in events" class="h-10 border">
-                                <td class="font-bold">{{ event.id }}</td>
+                                <td class="font-bold text-gray-600">{{ event.id }}</td>
                                 <td :title="event.file.type">
-                                    <div class="py-2 flex gap-3">
-                                        <FontAwesomeIcon :icon="'fa fa-'+ (event.file.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
-                                        <span>
+                                    <div class="py-2 flex flex-col text-left">
+                                        <span class="font-bold">
                                             {{ event.file.name }}
+                                        </span>
+                                        <span class="flex gap-2">
+                                            <FontAwesomeIcon :icon="'fa fa-'+event.file.type" :class="'self-center text-'+event.file.color+'-500'" />
+                                            <span class="text-xs text-gray-500">{{ event.file.filename }}</span>
                                         </span>
                                     </div>
                                 </td>
-                                <td>{{ dateFormat(event.visibleFrom) }}</td>
-                                <td>{{ dateFormat(event.visibleTo) }}</td>
                                 <td>
-                                    <div v-if="event.file.type =='VIDEO'" class="text-gray-400 text-xs">
+                                    <div class="flex flex-col">
+                                        <div class="flex gap-2">
+                                            <span class="min-w-16">Desde</span>
+                                            <span class="text-gray-800">{{ dateFormat(event.visibleFrom) }}</span>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <span class="min-w-16">Hasta</span>
+                                            <span class="text-gray-800">{{ dateFormat(event.visibleTo) }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div v-if="event.file.type =='video'" class="text-gray-400 text-xs">
                                         N/A
                                     </div>
                                     <div v-else>
@@ -182,7 +194,7 @@ const toggleProp = (obj,prop) =>{
                                         <SecondaryButton @click="toggleProp(event, 'visible')">
                                             <FontAwesomeIcon :icon="'fa fa-'+(event.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!event.visible}"/>
                                         </SecondaryButton>
-                                        <SecondaryButton @click="toggleProp(event, 'sound')" :disabled="!event.visible || event.file.type !='VIDEO'">
+                                        <SecondaryButton @click="toggleProp(event, 'sound')" :disabled="!event.visible || event.file.type !='video'">
                                             <FontAwesomeIcon :icon="'fa fa-'+(event.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!event.sound, 'text-orange-600':event.sound}"/>
                                         </SecondaryButton>
                                         <SecondaryButton @click="openeventModal($event, event)" title="Editar evento">

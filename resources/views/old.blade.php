@@ -35,11 +35,11 @@
 </head>
 <body>
     <div class="container" class="container">
-        @if ($banner['event']['file']['type'] == 'IMAGEN')
+        @if ($banner['event']['file']['type'] == 'image')
             <img src="{{$banner['event']['file']['url']}}" class="img">
         @endif
 
-        @if ($banner['event']['file']['type'] == 'VIDEO')
+        @if ($banner['event']['file']['type'] == 'video')
             <div class="video-content">
                 <video id="videoplayer" autoplay muted controls  />
                 <source src="{{route('streaming',$banner['event']['file']['id'])}}" type="video/mp4">

@@ -40,7 +40,7 @@ class BannerController extends Controller
                 'event' => [ 
                     'file' => [
                         'name' => 'Inicio',
-                        'type' => 'IMAGEN',
+                        'type' => 'image',
                         'url' => '/banner.png',
                     ]
                 ]
@@ -57,7 +57,7 @@ class BannerController extends Controller
         }
         
 
-        $next = $this->getNext($id, $date, $order);
+        $next = $this->getNext($date, $order);
         if(isset($next)){
             $props['next'] = $next->id;
         }
@@ -65,7 +65,7 @@ class BannerController extends Controller
         return $props;
     }
 
-    function getNext($id = null, $date, $order){
+    function getNext($date, $order){
         $today =date('y-m-d');
         $next = Programation::where('date', $date)
             ->where('visible',1)

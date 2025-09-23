@@ -81,10 +81,10 @@ const forceNext = () => {
     <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
         <Transition name="fade">
         <div v-if="!loading">
-            <div v-if="banner.event.file.type == 'IMAGEN'">
+            <div v-if="banner.event.file.type == 'image'">
                 <img :src="banner.event.file.url" class="max-h-screen" @error="handleError" @load="showNext">
             </div>
-            <div v-if="banner.event.file.type == 'VIDEO'" class="bg-black">
+            <div v-if="banner.event.file.type == 'video'" class="bg-black">
                 <video id="videoplayer" autoplay :muted="!banner.sound" controls @ended="goToNext" class="max-h-screen">
                     <source :src="route('streaming',banner.event.file.id)" type="video/mp4" @error="handleError"> 
                     Your browser does not support the video tag.
@@ -102,7 +102,7 @@ const forceNext = () => {
                             {{ banner.event.file.id }}
                         </h2>
                         <div class="flex-1 border-l px-5 text-center">
-                            <p class="text-xl text-amber-500"><FontAwesomeIcon :icon="'fa fa-'+(banner.event.file.type == 'VIDEO' ? 'camera' : 'image')" class="self-center text-2xl" /> <b>{{ banner.event.file.name }}</b></p>
+                            <p class="text-xl text-amber-500"><FontAwesomeIcon :icon="'fa fa-'+(banner.event.file.type == 'video' ? 'camera' : 'image')" class="self-center text-2xl" /> <b>{{ banner.event.file.name }}</b></p>
                             <p class="text-lg">Url: <b>{{ banner.event.file.url }}</b></p>
                         </div>
                     </div>

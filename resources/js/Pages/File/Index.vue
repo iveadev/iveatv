@@ -27,8 +27,10 @@ const emptyFile = {
     id: null,
     name: '',
     filename: '',
-    type:'IMAGEN',
+    type:'image',
     file:'',
+    _filename:'',
+    _type:'image',
     avalible: true,
 }
 
@@ -36,6 +38,11 @@ const file = useForm(emptyFile)
 
 const OpenModal= (evt, f = null) => {
     const _file = f ? {...f} : {...emptyFile}
+    if(_file.id){
+        _file._filename = _file.filename
+        _file._type = _file.type
+        _file.filename = _file.type = ''
+    }
     file.defaults(_file);
     file.reset();
     file.clearErrors();
@@ -104,7 +111,7 @@ const saveFile = () => {
         <template #header>
             <div class="flex">
                 <h2
-                class="flex-1 text-xl font-semibold leading-tight text-gray-800"
+                class="flex-1 text-xl font-semibold leading-tight text-red-900"
             >
                 Administrador de archivos
             </h2>
@@ -117,33 +124,40 @@ const saveFile = () => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div
-                    class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
+                    class="overflow-auto bg-white shadow-lg sm:rounded-lg"
                 >
                     <table class="w-full text-center">
                         <thead class="bg-gray-600 text-white">
                             <tr class="h-10">
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Filename</th>
-                                <th>Tipo</th>
-                                <th>Disponible</th>
-                                <th>Fecha de actualización</th>
-                                <th class="w-48">Acciones</th>
+                                <th>Archivo</th>
+                                <th>Última actualización</th>
+                                <th class="w-64">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="f in files" class="border">
-                                <td>{{ f.id }}</td>
-                                <td>{{ f.name }}</td>
-                                <td>{{ f.filename }}</td>
                                 <td>
-                                    <div class="flex gap-3">
-                                        <FontAwesomeIcon :icon="'fa fa-'+ (f.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
-                                        {{ f.type }}
+                                    <div class="font-bold text-gray-600">
+                                        {{ f.id }}
                                     </div>
-                                    
                                 </td>
-                                <td>{{ f.avalible ? 'Sí' : 'No' }}</td>
+                                <td class="flex flex-col text-left" :title="f.type">
+                                    <div class="font-bold">
+                                        <span class="self-center">
+                                            {{ f.name }}
+                                        </span>
+                                    </div>
+                                    <div class="flex gap-1 text-gray-600">
+                                        <FontAwesomeIcon :icon="'fa fa-'+ (f.type ==''? 'file' : f.type)" :class="'self-center text-'+(f.color)+'-500'" />
+                                        <span class="text-xs overflow-hidden text-ellipsis">
+                                            {{ f.filename }}
+                                        </span>
+                                    </div>
+                                    <div class="text-sm py-2">
+                                        <span v-if="!f.avalible" class="rounded p-1 bg-orange-500 text-white text-xs">NO DISPONIBLE</span>
+                                    </div>
+                                </td>
                                 <td>{{ dateFormat(f.updated_at) }}</td>
                                 <td>
                                     <div class="flex gap-2 justify-center">

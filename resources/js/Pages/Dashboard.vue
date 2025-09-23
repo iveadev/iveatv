@@ -154,7 +154,7 @@ const toggleProp = (obj,prop) =>{
         <template #header>
             <div class="flex">
                 <h2
-                class="flex-1 text-xl font-semibold leading-tight text-gray-800"
+                class="flex-1 text-xl font-semibold leading-tight text-red-900"
             >
                 Programación del día
             </h2>
@@ -177,7 +177,7 @@ const toggleProp = (obj,prop) =>{
                         </SecondaryButton>
                     </div>
                     <button type="button" class="px-3 rounded" title="Seleccionar otra fecha">
-                        <b class="text-blue-800 text-center">
+                        <b class="text-amber-600 text-center">
                             <TextInput v-model="pickedDate" type="date" @change="pickDate"/>
                         </b>
                     </button>
@@ -217,22 +217,27 @@ const toggleProp = (obj,prop) =>{
                                 v-for="(banner, index) in banners"
                                 class="h-10 border [&.is-dragging]:cursor-grabbing"
                                 :key="index"
-                                :class="{'border-2 border-purple-500': index == to}"
+                                :class="{'border-2 border-amber-600': index == to}"
                                 :draggable="enableDrag"
                                 @dragend.stop="reOrder"
                                 @dragleave.stop="getTo"
                                 :data-index="index"
                             >
-                                <td>{{ banner.id }}</td>
-                                <td class="font-bold text-red-800">{{ index +1 }}</td>
-                                <td>
-                                    <div class="flex gap-4" :title="banner.event.file.type">
-                                        <FontAwesomeIcon :icon="'fa fa-'+ (banner.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center text-gray-500" />
-                                        {{ banner.event.file.name }}
+                                <td class="text-gray-600 font-bold">{{ banner.id }}</td>
+                                <td class="font-bold text-amber-600 text-lg">{{ index +1 }}</td>
+                                <td :title="banner.event.file.type">
+                                    <div class="py-2 flex flex-col text-left">
+                                        <span class="font-bold">
+                                            {{ banner.event.file.name }}
+                                        </span>
+                                        <span class="flex gap-2">
+                                            <FontAwesomeIcon :icon="'fa fa-'+banner.event.file.type" :class="'self-center text-'+banner.event.file.color+'-500'" />
+                                            <span class="text-xs text-gray-500">{{ banner.event.file.filename }}</span>
+                                        </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div v-if="banner.event.file.type =='VIDEO'" class="text-gray-400 text-xs">
+                                    <div v-if="banner.event.file.type =='video'" class="text-gray-400 text-xs">
                                         N/A
                                     </div>
                                     <div v-else>
@@ -250,7 +255,7 @@ const toggleProp = (obj,prop) =>{
                                         <SecondaryButton @click="toggleProp(banner, 'visible')">
                                             <FontAwesomeIcon :icon="'fa fa-'+(banner.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!banner.visible}"/>
                                         </SecondaryButton>
-                                        <SecondaryButton @click="toggleProp(banner, 'sound')" :disabled="!banner.visible || banner.event.file.type !='VIDEO'">
+                                        <SecondaryButton @click="toggleProp(banner, 'sound')" :disabled="!banner.visible || banner.event.file.type !='video'">
                                             <FontAwesomeIcon :icon="'fa fa-'+(banner.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!banner.sound, 'text-orange-600':banner.sound}"/>
                                         </SecondaryButton>
                                         <SecondaryButton @click="openProgramationModal($event, banner)">
@@ -262,7 +267,7 @@ const toggleProp = (obj,prop) =>{
                                             </span>
                                         </SecondaryButton>
                                         <div class="flex-1 text-right" @mouseenter="enableDrag = true" @mouseleave="enableDrag = false">
-                                            <span title="Mover" class="p-2 opacity-0 group-hover:opacity-100 text-purple-500">
+                                            <span title="Mover" class="p-2 opacity-0 group-hover:opacity-100 text-amber-600">
                                                 <FontAwesomeIcon icon="fa fa-hand" class="self-center" />
                                             </span>
                                         </div>
@@ -288,12 +293,12 @@ const toggleProp = (obj,prop) =>{
             </template>
             <div class="py-3 bg-gray-300 flex gap-2">
                 <div class="w-20 text-right">Archivo:</div>
-                <FontAwesomeIcon :icon="'fa fa-'+ (programation.event.file.type == 'VIDEO' ? 'video':'image')" class="self-center" />
+                <FontAwesomeIcon :icon="'fa fa-'+ (programation.event.file.type == 'video' ? 'video':'image')" class="self-center" />
                 <div class="font-bold">{{ programation.event.file.name }}</div>
             </div>
             <div class="p-5">
                 <div class="flex gap-4">
-                    <div class="flex-1 flex flex-col gap-1" v-if="programation.event.file.type=='IMAGEN'">
+                    <div class="flex-1 flex flex-col gap-1" v-if="programation.event.file.type=='image'">
                         <InputLabel value="Duración" />
                         <div class="flex gap-1">
                             <TextInput v-model="programation.duration" type="number" step="5" min="0" class="w-5/6"/>

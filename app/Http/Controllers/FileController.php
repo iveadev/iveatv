@@ -77,8 +77,8 @@ class FileController extends Controller
         $inputs = $request->validate([
             'name' => 'required|max:255',
             'file' => 'sometimes|nullable|file',
-            'filename' => 'required|max:255',
-            'type' => 'sometimes|string',
+            'filename' => 'sometimes|nullable|max:255|unique:files,filename',
+            'type' => 'sometimes|nullable|string',
             'avalible' => 'boolean',
             'url' => 'sometimes|nullable',
         ]);
@@ -96,6 +96,7 @@ class FileController extends Controller
             $inputs['url'] = Storage::url($path);
         } else {
             unset($inputs['filename']);
+            unset($inputs['type']);
             unset($inputs['url']);
         }
         $fileObj->update($inputs);
