@@ -34,10 +34,11 @@ class File extends Model
         );
     }
 
-    public function getColorAttribute() : string{
-      if($this->avalible){
-        return $this->type == 'video' ? 'emerald' : 'lime';
-      }
-      return 'gray';
+    public function getColorAttribute() : object{
+      return (object)[
+        'text-lime-500'=> $this->avalible && $this->type == 'image', 
+        'text-emerald-500' => $this->avalible && $this->type == 'video',
+        'text-gray-400' => !$this->avalible,
+      ];
     }
 }

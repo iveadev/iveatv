@@ -157,21 +157,21 @@ const toggleProp = (obj,prop) =>{
                                         <span class="font-bold">
                                             {{ event.file.name }}
                                         </span>
-                                        <span class="flex gap-2">
-                                            <FontAwesomeIcon :icon="'fa fa-'+event.file.type" :class="'self-center text-'+event.file.color+'-500'" />
-                                            <span class="text-xs text-gray-500">{{ event.file.filename }}</span>
+                                        <span class="flex gap-2 text-gray-600">
+                                            <FontAwesomeIcon :icon="'fa fa-'+event.file.type" class="self-center" :class="event.file.color" />
+                                            <span class="text-xs">{{ event.file.filename }}</span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="flex flex-col">
                                         <div class="flex gap-2">
-                                            <span class="min-w-16">Desde</span>
-                                            <span class="text-gray-800">{{ dateFormat(event.visibleFrom) }}</span>
+                                            <span class="min-w-16 text-gray-500">Desde</span>
+                                            <span>{{ dateFormat(event.visibleFrom) }}</span>
                                         </div>
                                         <div class="flex gap-2">
-                                            <span class="min-w-16">Hasta</span>
-                                            <span class="text-gray-800">{{ dateFormat(event.visibleTo) }}</span>
+                                            <span class="min-w-16 text-gray-500">Hasta</span>
+                                            <span>{{ dateFormat(event.visibleTo) }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -192,7 +192,7 @@ const toggleProp = (obj,prop) =>{
                                 <td>
                                     <div class="flex gap-2 justify-center">
                                         <SecondaryButton @click="toggleProp(event, 'visible')">
-                                            <FontAwesomeIcon :icon="'fa fa-'+(event.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!event.visible}"/>
+                                            <FontAwesomeIcon :icon="'fa fa-'+(event.visible ? 'stop':'play')" class="text-xl" :class="{'text-emerald-600':!event.visible}"/>
                                         </SecondaryButton>
                                         <SecondaryButton @click="toggleProp(event, 'sound')" :disabled="!event.visible || event.file.type !='video'">
                                             <FontAwesomeIcon :icon="'fa fa-'+(event.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!event.sound, 'text-orange-600':event.sound}"/>

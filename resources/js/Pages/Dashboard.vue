@@ -231,8 +231,8 @@ const toggleProp = (obj,prop) =>{
                                             {{ banner.event.file.name }}
                                         </span>
                                         <span class="flex gap-2">
-                                            <FontAwesomeIcon :icon="'fa fa-'+banner.event.file.type" :class="'self-center text-'+banner.event.file.color+'-500'" />
-                                            <span class="text-xs text-gray-500">{{ banner.event.file.filename }}</span>
+                                            <FontAwesomeIcon :icon="'fa fa-'+banner.event.file.type" class="self-center" :class="banner.event.file.color" />
+                                            <span class="text-xs text-gray-600">{{ banner.event.file.filename }}</span>
                                         </span>
                                     </div>
                                 </td>
@@ -253,7 +253,7 @@ const toggleProp = (obj,prop) =>{
                                 <td>
                                     <div class="flex gap-1 justify-items-center group">
                                         <SecondaryButton @click="toggleProp(banner, 'visible')">
-                                            <FontAwesomeIcon :icon="'fa fa-'+(banner.visible ? 'stop':'play')" class="text-xl" :class="{'text-gray-400':!banner.visible}"/>
+                                            <FontAwesomeIcon :icon="'fa fa-'+(banner.visible ? 'stop':'play')" class="text-xl" :class="{'text-emerald-600':!banner.visible}"/>
                                         </SecondaryButton>
                                         <SecondaryButton @click="toggleProp(banner, 'sound')" :disabled="!banner.visible || banner.event.file.type !='video'">
                                             <FontAwesomeIcon :icon="'fa fa-'+(banner.sound ? 'volume-xmark':'volume-low')" class="text-xl" :class="{'text-gray-400':!banner.sound, 'text-orange-600':banner.sound}"/>
