@@ -26,7 +26,14 @@ class BannerController extends Controller
         $id = $request->get('id') ?? null;
         $date = $request->get('date') ?? date('Y-m-d');
         $order = 0;
-        $props = [];
+        $props = [
+            'config'=> [
+               'date' =>  $request->get('date'),
+               'times' => ((int)$request->get('times'))+1,
+               'empty' => false,
+               'waiting' => 60,
+            ]
+        ];
         $toShow = null;
 
         if(isset($id)){
@@ -47,19 +54,34 @@ class BannerController extends Controller
             ];
         }
 
-        $props['banner'] = $toShow;
+        $props['toShow'] = $toShow;
         $have_visibles = Programation::where('date', $date)
                 ->where('visible',1)
                 ->count();
         if($have_visibles == 0){
-            $props['banner']['duration']= 30;
-            $props['empty'] = true;
+            $props['config']['empty'] = true;
         }
-        
 
         $next = $this->getNext($date, $order);
         if(isset($next)){
             $props['next'] = $next->id;
+        }
+
+        $h = (int)date('H');
+        if($props['config']['times'] % 100 == 0){
+            //pequeña pausa
+            $props['config']['empty'] = true;
+            $props['config']['waiting'] = 10; // segundos
+            if($props['config']['times'] >= 1000){
+                // reset del contador
+                $props['config']['times'] = 1;
+            }
+        }
+        if($h < 7 || $h > 19){
+            $props['config']['standby'] = true;
+            $props['config']['empty'] = true;
+            $props['config']['waiting'] = 600; // segundos
+            $props['next'] = null;
         }
         
         return $props;

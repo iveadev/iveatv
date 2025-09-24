@@ -1,10 +1,13 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { onMounted, onUpdated, ref, watch } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 
 const props = defineProps({
-    banner: {
+    config: {
+        type: Object,
+    },
+    toShow: {
         type: Object,
     },
     empty: {
@@ -19,8 +22,10 @@ const props = defineProps({
 const loading = ref(true)
 const haveError = ref(false)
 const waiting = ref(500);
+const config = ref(props.config)
+const banner = ref(null)
 
-const nextBanner = ref(props.next)
+const nextbanner = ref(props.next)
 
 const goToNext = () => {
     // avanza inmediatamente al siguiente contenido
@@ -28,39 +33,55 @@ const goToNext = () => {
     showNext()
 }
 
-const seconds = ref(props.banner.duration) 
+const seconds = ref(0) 
 
-const showNext = () => {
+const showNext = () => { 
     const duration = seconds.value * 1000
     // tiempo mostrando + espera de carga
+    setTimeout(()=>{
+        banner.value = null
+    }, duration)
     setTimeout(() => {
         loading.value = true
-        router.visit(route('banner.display', {id: nextBanner.value}),{
-            only:['banner', 'next', 'empty'],
-            onSuccess:()=>{
-                loading.value = false
-                seconds.value = props.banner.duration
-                nextBanner.value = props.next
-
-            }
-        })
+        const params = {
+            id: nextbanner.value,
+            times: config.value.times
+        }
+        if(config.value.date){
+            params.date = config.value.date
+        }
+        router.get(route('banner.display', params))
+        
     },duration+waiting.value);
 
 }
 
+const loadBanner = ()=> {
+    loading.value = false
+    config.value.empty = false
+    config.value.standby = false
+    const _b = props.toShow
+    if(config.standby){
+        nextbanner.value = null
+        _b.duration = config.waiting
+    }
+    banner.value = _b
+    seconds.value = _b.duration
+}
+
 onMounted(()=>{
-    console.log(props.next)
-    if(props.empty) {
-        setTimeout(() => {
-            loading.value = false        
-        }, 30000);
+    if(props.config.empty) {
+        setTimeout(()=>{
+            loadBanner()
+        },props.config.waiting * 1000);
     } else {
-        loading.value = false
+        loadBanner()
     }
 })
 
 const handleError = () => {
-    loading.value = true
+    config.value.empty = false
+    config.value.standby = false
     haveError.value = true
     seconds.value = 5
     showNext();
@@ -71,79 +92,90 @@ const reloadPage=() => {
 }
 
 const forceNext = () => {
-    router.visit(route('banner.display', {id: nextBanner.value}))
+    router.visit(route('banner.display', {id: nextbanner.value}))
 }
+
+const title = computed(()=>{
+    return banner.value ? banner.value.event.file.name : 'Cargando...'
+})
 
 </script>
 
 <template>
-    <Head :title="banner.event.file.name" />
-    <main class="bg-black min-h-screen min-w-screen overflow-hidden grid justify-items-center content-center">
-        <Transition name="fade">
-        <div v-if="!loading">
-            <div v-if="banner.event.file.type == 'image'">
-                <img :src="banner.event.file.url" class="max-h-screen" @error="handleError" @load="showNext">
-            </div>
-            <div v-if="banner.event.file.type == 'video'" class="bg-black">
-                <video id="videoplayer" autoplay :muted="!banner.sound" controls @ended="goToNext" class="max-h-screen">
-                    <source :src="route('streaming',banner.event.file.id)" type="video/mp4" @error="handleError"> 
-                    Your browser does not support the video tag.
-                </video> 
-            </div>
+    <Head :title="title" />
+    <main class="bg-black text-white overflow-hidden min-h-screen min-w-screen">
+        <div class="fixed top-5 right-5 group w-56 grid grid-cols-2 justify-items-end">
+            <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="reloadPage">
+                <div class="hover:text-white p-6 hover:bg-blue-500/40 rounded-xl">
+                    <div class="text-7xl">
+                        <FontAwesomeIcon icon="fa fa-rotate-right" />
+                    </div>
+                </div>
+            </button>
+            <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="forceNext">
+                <div class="hover:text-white p-6 hover:bg-green-500/40 rounded-xl">
+                    <div class="text-7xl">
+                        <FontAwesomeIcon icon="fa fa-chevron-right" />
+                    </div>
+                </div>
+            </button>
         </div>
-        </Transition>
-        <Transition name="fade">
-            <div class="text-white">
+        <div class="min-h-screen min-w-screen" v-if="!haveError && !config.empty">
+                    <div v-if="loading" class="grid justify-items-center place-content-center gap-6 min-h-screen min-w-screen">
+                        <img src="/logo-white.png"></img>
+                    </div>
+            <div class="grid justify-items-center place-content-center min-h-screen min-w-screen">
+                <Transition name="fade">
+                    <div v-if="banner">
+                            <div v-if="banner.event.file.type == 'image'">
+                                <img :src="banner.event.file.url" class="max-h-screen" @error="handleError" @load="showNext">
+                            </div>
+                        <div v-if="banner.event.file.type == 'video'">
+                            <video id="videoplayer" autoplay :muted="!banner.sound" controls @ended="goToNext" class="max-h-screen">
+                                <source :src="route('streaming',banner.event.file.id)" type="video/mp4" @error="handleError"> 
+                                Your browser does not support the video tag.
+                            </video> 
+                        </div>
+                    </div>
+                </Transition>
+            </div>  
+        </div>
+        <div v-else class="min-h-screen min-w-screen">
+            <div class="grid justify-items-center gap-4 place-content-center min-h-screen min-w-screen">
+                <img src="/logo-white.png"></img>
+                <p class="text-xl w-64 text-center">Instituto Veracruzano de Educación para los Adultos</p>
                 <div v-if="haveError" class="bg-gray-600 p-6 text-center rounded-2xl">
                     <h1 class="text-2xl font-bold py-5">¡Upss!</h1>
-                    <p class="text-xl">Parece que tuvimos problemas al cargar el siguiente contenido:</p>
+                    <p class="text-red-800">Parece que tuvimos problemas al cargar el siguiente contenido:</p>
                     <div class="p-4 flex gap-2">
-                        <h2 class="w-1/3 text-2xl font-bold p-3">
-                            {{ banner.event.file.id }}
+                        <h2 class="w-1/3 text-4xl font-bold p-3">
+                            <p class="text-xs">ID del Archivo</p>
+                            <p>{{ banner.event.file.id }}</p>
+
                         </h2>
                         <div class="flex-1 border-l px-5 text-center">
-                            <p class="text-xl text-amber-500"><FontAwesomeIcon :icon="'fa fa-'+(banner.event.file.type == 'video' ? 'camera' : 'image')" class="self-center text-2xl" /> <b>{{ banner.event.file.name }}</b></p>
+                            <p class="text-xl text-amber-500">
+                                <p><FontAwesomeIcon :icon="'fa fa-'+banner.event.file.type" class="self-center text-2xl" /></p>
+                                <p class="text-bold">{{ banner.event.file.name }}</p>
+                            </p>
                             <p class="text-lg">Url: <b>{{ banner.event.file.url }}</b></p>
                         </div>
                     </div>
                 </div>
-                <div class="text-white fixed bottom-10 left-10 right-32">
-                    <div v-if="props.empty & loading">
-                        <p class="text-xl">Instituto Veracruzano de Educación para los Adultos</p>
-                        <div class="flex gap-4 text-sm text-white/40">
-                            <a href="https://github.com/cesariux23" target="_blank" class="flex gap-2">
-                                <FontAwesomeIcon icon="fa fa-code" class="self-center text-md font-bold" />
-                                <span>Developed by :</span>
-                                <span class="font-bold">Departamento de Tecnologías de la Información</span>
-                            </a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="fixed bottom-10 right-10 text-white grid justify-items-center" v-if="loading">
-                    <Transition name="pulse">
-                        <img src="/logo-white.png" class="max-h-40 lg:max-h-full" :class="{'pulsing-element':props.empty}">
-                    </Transition>
-                </div>
-                <div class="fixed top-5 right-5 group w-56 grid grid-cols-2 justify-items-end">
-                    <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="reloadPage">
-                        <div class="hover:text-white p-6 hover:bg-blue-500/40 rounded-xl">
-                            <div class="text-7xl">
-                                <FontAwesomeIcon icon="fa fa-rotate-right" />
-                            </div>
-                        </div>
-                    </button>
-                    <button type="button" class="font-bold rounded-xl transparent text-transparent group-hover:bg-black/15 group-hover:text-white/20" @click="forceNext">
-                        <div class="hover:text-white p-6 hover:bg-green-500/40 rounded-xl">
-                            <div class="text-7xl">
-                                <FontAwesomeIcon icon="fa fa-chevron-right" />
-                            </div>
-                        </div>
-                    </button>
-                </div>
             </div>
-        </Transition>
+
+            <div class="text-white w-full text-center fixed bottom-10 text-white/40">
+                <div v-if="config.standby" class="pb-16">
+                    <FontAwesomeIcon icon="fa fa-moon" class="text-4xl text-yellow-200/50" />
+                    <p>Modo nocturno</p>
+                </div>
+                    <a href="https://github.com/cesariux23" target="_blank" class="flex gap-2 place-content-center" v-if="!haveError">
+                        <FontAwesomeIcon icon="fa fa-code" class="self-center text-md font-bold text-white" />
+                        <span class="font-bold text-white">Developed by :</span>
+                        <span class="font-bold">Departamento de Tecnologías de la Información</span>
+                    </a>
+            </div>
+        </div>
     </main>
 </template>
 <style scoped>
