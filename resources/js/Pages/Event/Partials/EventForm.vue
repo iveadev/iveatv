@@ -4,7 +4,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 
 const event = defineModel()
 
@@ -16,6 +16,12 @@ onMounted(()=> {
         files.value = data.data
     })
 })
+
+const selectedFile = computed(()=>{
+    return files.value.find(f=> f.id == event.value.file_id)
+})
+
+
 
 </script>
 <template>
@@ -29,7 +35,7 @@ onMounted(()=> {
                 </select>
                 <InputError :message="event.errors.file_id" />
             </div>
-            <div class=" w-32 flex flex-col gap-1">
+            <div class=" w-32 flex flex-col gap-1" v-if="selectedFile && selectedFile.type == 'image'">
                 <InputLabel value="Duración" />
                 <div class="flex gap-1">
                     <TextInput v-model="event.duration" type="number" step="5" min="0" class="w-5/6"/>
@@ -37,7 +43,7 @@ onMounted(()=> {
                 </div>
                 <InputError :message="event.errors.duration" />
             </div>
-            <div class="w-20 flex-col gap-1">
+            <div class="w-20 flex-col gap-1" v-if="selectedFile && selectedFile.type == 'video'">
                 <InputLabel value="Sonido"/>
                 <div class="flex gap-4 pt-3">
                     <Checkbox v-model:checked="event.sound" class="self-center" />

@@ -32,7 +32,7 @@ const emptyevent = {
     file_id:'',
     duration:'10',
     sound: false,
-    visible: false,
+    visible: true,
     visibleFrom: props.today,
     visibleTo: props.today,
 }
@@ -136,7 +136,7 @@ const toggleProp = (obj,prop) =>{
                             <tr class="h-10">
                                 <th>ID</th>
                                 <th class="text-left">Archivo a reproducir</th>
-                                <th class="text-left">Duración</th>
+                                <th class="text-left">Visibilidad</th>
                                 <th title="Duración (en segundos)">
                                     <FontAwesomeIcon icon="fa fa-clock" />
                                 </th>

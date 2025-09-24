@@ -13,6 +13,7 @@ Route::get('/', function () {
     return redirect('dashboard');
 })->name('home');
 Route::get('/show', [BannerController::class, 'display'])->name('banner.display');
+Route::get('/next', [BannerController::class, 'getNext'])->name('banner.getNext');
 Route::get('/old', [BannerController::class, 'old'])->name('banner.old');
  Route::get('/streaming/{id}', [BannerController::class, 'getStreaming'])->name('streaming');
 
