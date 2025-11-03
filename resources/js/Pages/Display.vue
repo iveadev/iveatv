@@ -101,14 +101,7 @@ const loadNext = () => {
         params.date = config.value.date
     }
     const url = route('banner.display', params);
-    if(config.value.needsReload){
-        // cambia url
-        window.location.href = url;
-        // forza la recarga
-        reloadPage()
-    } else {
-        window.location.replace(url);
-    }
+    window.location.replace(url);
 }
 
 const title = computed(()=>{

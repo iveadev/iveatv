@@ -75,8 +75,6 @@ class BannerController extends Controller
             if($props['config']['times'] >= 1000){
                 // reset del contador
                 $props['config']['times'] = 1;
-                // Se recarga para limpiar cache
-                $props['config']['needsReload'] = 1;
             }
         }
 
