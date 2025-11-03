@@ -77,7 +77,7 @@ class BannerController extends Controller
                 $props['config']['times'] = 1;
             }
         }
-        if($h < 7 || $h > 19){
+        if($h < 7 || $h > 18){
             $props['config']['standby'] = true;
             $props['config']['empty'] = true;
             $props['config']['waiting'] = 600; // segundos

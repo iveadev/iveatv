@@ -77,7 +77,7 @@ class FileController extends Controller
         $inputs = $request->validate([
             'name' => 'required|max:255',
             'file' => 'sometimes|nullable|file',
-            'filename' => 'sometimes|nullable|max:255|unique:files,filename',
+            'filename' => 'sometimes|nullable|max:255',
             'type' => 'sometimes|nullable|string',
             'avalible' => 'boolean',
             'url' => 'sometimes|nullable',
