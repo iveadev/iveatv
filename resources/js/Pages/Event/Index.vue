@@ -167,19 +167,16 @@ const _events = computed(()=>{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(event) in _events" class="h-10 border" :class="{'border-b-orange-300':!event.isCurrent}">
+                            <tr v-for="(event) in _events" class="h-10 border">
                                 <td class="font-bold text-gray-600">{{ event.id }}</td>
                                 <td :title="event.file.type">
-                                    <div class="py-2 flex flex-col text-left">
-                                        <span class="font-bold">
+                                    <div class="p-2 flex flex-col text-left border-l-4" :class="{'border-l-orange-500':!event.isCurrent, 'border-l-transparent': event.isCurrent}">
+                                        <span class="font-bold" >
                                             {{ event.file.name }}
                                         </span>
                                         <span class="flex gap-2 text-gray-600">
                                             <FontAwesomeIcon :icon="'fa fa-'+event.file.type" class="self-center" />
                                             <span class="text-xs">{{ event.file.filename }}</span>
-                                        </span>
-                                        <span class="text-white font-bold text-xs" v-if="!event.isCurrent">
-                                            <span class="bg-orange-500 px-1 rounded uppercase">Período no vigente</span>
                                         </span>
                                     </div>
                                 </td>
@@ -193,6 +190,9 @@ const _events = computed(()=>{
                                             <span class="min-w-16 text-gray-500">Hasta</span>
                                             <span>{{ dateFormat(event.visibleTo) }}</span>
                                         </div>
+                                        <span class="text-white font-bold text-xs" v-if="!event.isCurrent">
+                                            <span class="bg-orange-500 px-1 rounded uppercase">No vigente</span>
+                                        </span>
                                     </div>
                                 </td>
                                 <td>
