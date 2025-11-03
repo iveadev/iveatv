@@ -130,7 +130,7 @@ const _files = computed(()=>{
             </div>
         </template>
 
-        <div class="pt-2">
+        <div class="py-2">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="py-2 flex gap-1">
                     <input type="text" placeholder="Filtrar..." class="flex-1 placeholder:text-gray-300 border-gray-300 rounded" v-model="filter">
