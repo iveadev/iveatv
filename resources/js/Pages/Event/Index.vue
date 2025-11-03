@@ -150,7 +150,7 @@ const toggleProp = (obj,prop) =>{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(event) in events" class="h-10 border" :class="{'text-orange-500':!event.isCurrent}">
+                            <tr v-for="(event) in events" class="h-10 border" :class="{'border-b-orange-300':!event.isCurrent}">
                                 <td class="font-bold text-gray-600">{{ event.id }}</td>
                                 <td :title="event.file.type">
                                     <div class="py-2 flex flex-col text-left">
