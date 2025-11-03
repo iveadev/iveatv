@@ -64,11 +64,15 @@ const loadBanner = ()=> {
 
 onMounted(()=>{
     if(props.config.empty) {
+        if(props.config.needsReload){
+            console.log("se recargará")
+        }
         setTimeout(()=>{
             // Muestra unos segundos la pantalla vacia
             loadBanner()
         },props.config.waiting * 1000);
     } else {
+        
         // carga la informacion del banner
         loadBanner()
     }
@@ -96,7 +100,15 @@ const loadNext = () => {
     if(config.value.date){
         params.date = config.value.date
     }
-    window.location.replace(route('banner.display', params));
+    const url = route('banner.display', params);
+    if(config.value.needsReload){
+        // cambia url
+        window.location.href = url;
+        // forza la recarga
+        reloadPage()
+    } else {
+        window.location.replace(url);
+    }
 }
 
 const title = computed(()=>{

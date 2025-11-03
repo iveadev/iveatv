@@ -41,6 +41,7 @@ class BannerController extends Controller
             $order = $toShow->order;            
         }
         if(!isset($toShow)) {
+            // banner inicial
             $toShow = [
                 'duration' => 5,
                 'sound' => true,
@@ -67,7 +68,6 @@ class BannerController extends Controller
             $props['next'] = $next->id;
         }
 
-        $h = (int)date('H');
         if($props['config']['times'] % 100 == 0){
             //pequeña pausa
             $props['config']['empty'] = true;
@@ -75,8 +75,13 @@ class BannerController extends Controller
             if($props['config']['times'] >= 1000){
                 // reset del contador
                 $props['config']['times'] = 1;
+                // Se recarga para limpiar cache
+                $props['config']['needsReload'] = 1;
             }
         }
+
+        // modo standby
+        $h = (int)date('H');
         if($h < 7 || $h > 18){
             $props['config']['standby'] = true;
             $props['config']['empty'] = true;
