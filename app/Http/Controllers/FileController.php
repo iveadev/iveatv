@@ -128,6 +128,6 @@ class FileController extends Controller
      * Retorna la lista de archivos disponibles
      */
     function getList(){
-        return File::where('avalible',1)->get();
+        return File::where('avalible',1)->orderBy('updated_at','desc')->get();
     }
 }
