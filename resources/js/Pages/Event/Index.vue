@@ -167,10 +167,14 @@ const _events = computed(()=>{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(event) in _events" class="h-10 border">
-                                <td class="font-bold text-gray-600">{{ event.id }}</td>
+                            <tr v-for="(event) in _events" class="border">
+                                <td class="font-bold text-gray-600">
+                                    <div class="p-2 border-l-4" :class="{'border-l-orange-500':!event.isCurrent, 'border-l-green-500': event.isCurrent && event.visible, 'border-l-gray-300': event.isCurrent && !event.visible}">
+                                        {{ event.id }}
+                                    </div>
+                                </td>
                                 <td :title="event.file.type">
-                                    <div class="p-2 flex flex-col text-left border-l-4" :class="{'border-l-orange-500':!event.isCurrent, 'border-l-transparent': event.isCurrent}">
+                                    <div class="p-2 flex flex-col text-left">
                                         <span class="font-bold" >
                                             {{ event.file.name }}
                                         </span>
