@@ -5,7 +5,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { dateFormat } from '@/utils';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import EventForm from './Partials/EventForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useToasterStore } from '@/stores/notify';
@@ -107,6 +107,17 @@ const toggleProp = (obj,prop) =>{
     })
 }
 
+
+//filtrado
+const filter = ref('')
+const _events = computed(()=>{
+    const _f = filter.value.trim()
+    if(_f.length>0){
+        return props.events.filter(e=>e.file.name.search(new RegExp(_f,'i')) >=0)
+    }
+    return props.events
+})
+
 </script>
 
 <template>
@@ -126,8 +137,15 @@ const toggleProp = (obj,prop) =>{
             </div>
         </template>
 
-        <div class=" pt-12">
+        <div class=" pt-2">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="py-2 flex">
+                    <input type="text" placeholder="Filtrar..." class="flex-1 placeholder:text-gray-300 border-gray-300 rounded" v-model="filter">
+                    <button class="px-4" @click="filter=''" v-if="filter.length>0">
+                        <FontAwesomeIcon icon="fa fa-times"/>
+                        Limpiar
+                    </button>
+                </div>
                 <div
                     class="overflow-hidden bg-white shadow-lg sm:rounded-lg"
                 >
@@ -150,7 +168,7 @@ const toggleProp = (obj,prop) =>{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(event) in events" class="h-10 border" :class="{'border-b-orange-300':!event.isCurrent}">
+                            <tr v-for="(event) in _events" class="h-10 border" :class="{'border-b-orange-300':!event.isCurrent}">
                                 <td class="font-bold text-gray-600">{{ event.id }}</td>
                                 <td :title="event.file.type">
                                     <div class="py-2 flex flex-col text-left">
@@ -211,10 +229,10 @@ const toggleProp = (obj,prop) =>{
                                     </div>
                                 </td>
                             </tr>
-                            <tr v-if="events.length == 0">
+                            <tr v-if="_events.length == 0">
                                 <td colspan="7">
                                     <div class="py-6 text-xl text-gray-500">
-                                        Sin eventos programados
+                                        Sin eventos para mostrar
                                     </div>
                                 </td>
                             </tr>

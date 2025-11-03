@@ -3,7 +3,7 @@ import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import FileForm from './FileForm.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { dateFormat } from '@/utils';
@@ -103,6 +103,15 @@ const saveFile = () => {
     }
 }
 
+const filter = ref('')
+const _files = computed(()=>{
+    const _f = filter.value.trim()
+    if(_f.length>0){
+        return props.files.filter(f=>f.name.search(new RegExp(_f,'i')) >=0)
+    }
+    return props.files
+})
+
 </script>
 <template>
     <Head title="Archivos" />
@@ -121,8 +130,15 @@ const saveFile = () => {
             </div>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+        <div class="pt-2">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="py-2 flex">
+                    <input type="text" placeholder="Filtrar..." class="flex-1 placeholder:text-gray-300 border-gray-300 rounded" v-model="filter">
+                    <button class="px-4" @click="filter=''" v-if="filter.length>0">
+                        <FontAwesomeIcon icon="fa fa-times"/>
+                        Limpiar
+                    </button>
+                </div>
                 <div
                     class="overflow-auto bg-white shadow-lg sm:rounded-lg"
                 >
@@ -136,7 +152,7 @@ const saveFile = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="f in files" class="border">
+                            <tr v-for="f in _files" class="border">
                                 <td>
                                     <div class="font-bold text-gray-600">
                                         {{ f.id }}
