@@ -139,11 +139,10 @@ const _events = computed(()=>{
 
         <div class=" pt-2">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="py-2 flex">
+                <div class="py-2 flex gap-1">
                     <input type="text" placeholder="Filtrar..." class="flex-1 placeholder:text-gray-300 border-gray-300 rounded" v-model="filter">
-                    <button class="px-4" @click="filter=''" v-if="filter.length>0">
+                    <button class="px-4 text-white rounded bg-red-500" @click="filter=''" v-if="filter.length>0" title="Limpiar">
                         <FontAwesomeIcon icon="fa fa-times"/>
-                        Limpiar
                     </button>
                 </div>
                 <div
