@@ -15,7 +15,7 @@ class EventController extends Controller
     public function index()
     {
         //
-        $events = Event::orderBy('visibleTo')->get();
+        $events = Event::orderBy('visibleTo', 'desc')->get();
         return Inertia::render('Event/Index',['events' => $events, 'today' => date('Y-m-d')]);
     }
 

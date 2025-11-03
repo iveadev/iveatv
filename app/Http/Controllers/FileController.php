@@ -17,7 +17,7 @@ class FileController extends Controller
      */
     public function index()
     {
-        $files = File::all();
+        $files = File::orderBy('updated_at','desc')->get();
         return Inertia::render('File/Index',['files'=> $files]);
     }
 
