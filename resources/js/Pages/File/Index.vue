@@ -149,7 +149,7 @@ const saveFile = () => {
                                         </span>
                                     </div>
                                     <div class="flex gap-1 text-gray-600">
-                                        <FontAwesomeIcon :icon="'fa fa-'+ (f.type ==''? 'file' : f.type)" :class="f.color" />
+                                        <FontAwesomeIcon :icon="'fa fa-'+ (f.type ==''? 'file' : f.type)"/>
                                         <span class="text-xs overflow-hidden text-ellipsis">
                                             {{ f.filename }}
                                         </span>

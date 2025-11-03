@@ -150,7 +150,7 @@ const toggleProp = (obj,prop) =>{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(event) in events" class="h-10 border">
+                            <tr v-for="(event) in events" class="h-10 border" :class="{'bg-amber-100 border-amber-300 text-black':!event.isCurrent}">
                                 <td class="font-bold text-gray-600">{{ event.id }}</td>
                                 <td :title="event.file.type">
                                     <div class="py-2 flex flex-col text-left">
@@ -158,8 +158,11 @@ const toggleProp = (obj,prop) =>{
                                             {{ event.file.name }}
                                         </span>
                                         <span class="flex gap-2 text-gray-600">
-                                            <FontAwesomeIcon :icon="'fa fa-'+event.file.type" class="self-center" :class="event.file.color" />
+                                            <FontAwesomeIcon :icon="'fa fa-'+event.file.type" class="self-center" />
                                             <span class="text-xs">{{ event.file.filename }}</span>
+                                        </span>
+                                        <span class="text-white font-bold text-xs" v-if="!event.isCurrent">
+                                            <span class="bg-orange-500 px-1 rounded uppercase">Período no vigente</span>
                                         </span>
                                     </div>
                                 </td>
@@ -184,10 +187,10 @@ const toggleProp = (obj,prop) =>{
                                     </div>
                                 </td>
                                 <td>
-                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-200':!event.visible, 'text-green-600 font-bold':event.visible}"/>
+                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-400':!event.visible, 'text-green-600 font-bold':event.visible && event.isCurrent}"/>
                                 </td>
                                 <td :class="{'text-gray-400':!event.sound, 'font-bold':event.sound}">
-                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-200':!event.sound, 'text-green-600 font-bold':event.sound}"/>
+                                    <FontAwesomeIcon icon="fa fa-check" :class="{'text-gray-400':!event.sound, 'text-green-600 font-bold':event.sound}"/>
                                 </td>
                                 <td>
                                     <div class="flex gap-2 justify-center">

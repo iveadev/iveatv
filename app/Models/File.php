@@ -16,10 +16,6 @@ class File extends Model
         'url',
     ];
 
-    protected $appends = [
-        'color',
-    ];
-
     protected function casts(): array
     {
         return [
@@ -32,13 +28,5 @@ class File extends Model
         return Attribute::make(
             get: fn (string $value) => strtolower(substr($value,0,5)),
         );
-    }
-
-    public function getColorAttribute() : object{
-      return (object)[
-        'text-lime-500'=> $this->avalible && $this->type == 'image', 
-        'text-emerald-500' => $this->avalible && $this->type == 'video',
-        'text-gray-400' => !$this->avalible,
-      ];
     }
 }

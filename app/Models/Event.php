@@ -23,6 +23,10 @@ class Event extends Model
     protected $with= [
         'file'
     ];
+    
+    protected $appends = [
+        'isCurrent'
+    ];
 
     protected $hidden= [
         'created_at',
@@ -38,6 +42,7 @@ class Event extends Model
     }
 
     public function getDateRange() {
+        // calcula el intervalo de dias para generar la programación
         $format = 'y-m-d';
         $from = date_create($this->visibleFrom);
         $dif = $diff=date_diff($from,date_create($this->visibleTo));
@@ -61,5 +66,14 @@ class Event extends Model
     function destroyRelatedProgramation() {
         $ids = $this->programation->select('id')->flatten();
         programation::whereIn('id',$ids)->delete();
+    }
+
+    function getIsCurrentAttribute() {
+        // regresa si el evente actualmente esta vigente
+        $today = date('Y-m-d');
+        $to= $this->visibleTo;
+        return $to >= $today;
+
+        
     }
 }
