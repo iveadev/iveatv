@@ -187,10 +187,10 @@ const _files = computed(()=>{
                                     </div>
                                 </td>
                             </tr>
-                            <tr v-if="files.length == 0">
+                            <tr v-if="_files.length == 0">
                                 <td colspan="7">
                                     <div class="py-6 text-xl text-gray-500">
-                                        Sin archivos
+                                        Sin archivos para mostrar
                                     </div>
                                 </td>
                             </tr>
