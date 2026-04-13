@@ -31,7 +31,7 @@ const emptyevent = {
     title:'',
     file_id:'',
     duration:'10',
-    sound: false,
+    sound: true,
     visible: true,
     visibleFrom: props.today,
     visibleTo: props.today,
