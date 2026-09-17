@@ -271,7 +271,7 @@ watch(
         <Transition name="fade">
             <div v-if="loading && !config.empty" class="fixed top-0 left-0 w-full h-full bg-black/50  flex justify-center items-center flex flex-col gap-2">
                 <img src="/logo-white.png" class="self-center"></img>
-                <div class="text-2xl font-bold pt-5 flex gap-1">
+                <div class="text-4xl font-bold pt-5 flex gap-1">
                     <div>
                         {{ currentTime[0] }}
                     </div>
@@ -280,7 +280,7 @@ watch(
                         {{ currentTime[1] }}
                     </div>
                     <span>:</span>
-                    <div class="w-8 p-auto" :class="{'text-yellow-500': currentTime[2]%2 ==0}">
+                    <div class="w-12 p-auto" :class="{'text-yellow-500': currentTime[2]%2 ==0}">
                         {{ currentTime[2] }}
                     </div>
                     <div>
