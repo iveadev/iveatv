@@ -269,7 +269,7 @@ watch(
         </div>
         <!-- loading -->
         <Transition name="fade">
-            <div v-if="loading && !config.empty" class="fixed top-0 left-0 w-full h-full bg-black flex justify-center items-center flex flex-col gap-2">
+            <div v-if="loading && !config.empty" class="fixed top-0 left-0 w-full h-full flex justify-center items-center flex flex-col gap-2">
                 <img src="/logo-white.png" class="self-center"></img>
                 <div class="text-4xl font-bold pt-5 flex gap-1">
                     <div>
@@ -313,10 +313,10 @@ watch(
         <!-- Banner de fecha -->
          <Transition name="slide-up">
             <div
-            class="fixed bottom-0 w-full px-4 py-2 flex bg-rose-900 text-xl border-t-4 border-yellow-600"
+            class="fixed bottom-0 w-full px-4 py-6 flex bg-rose-900 text-xl border-t-4 border-yellow-600"
             v-if ="showDate"
             >
-                <p class="font-bold flex-1 text-center">Hoy es {{ currentDate }}.</p>
+                <p class="font-bold flex-1 text-center text-3xl">Hoy es {{ currentDate }}.</p>
             </div>
         </Transition>
     </main>
